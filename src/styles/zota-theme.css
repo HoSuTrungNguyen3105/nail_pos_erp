@@ -1,0 +1,62 @@
+/* Zota Design System Updates */
+:root {
+    /* Brand Colors */
+    --primary: #d946ef;
+    /* Pink/Fuchsia base */
+    --primary-foreground: #ffffff;
+
+    /* Gradient Backgrounds */
+    --bg-gradient-start: #2e1065;
+    /* Deep Purple */
+    --bg-gradient-end: #db2777;
+    /* Pink 600 */
+    --header-bg: #1e1b4b;
+    /* Indigo 950 */
+
+    /* Card Colors */
+    --card: #ffffff;
+    --card-foreground: #1e293b;
+
+    /* Status Colors from Image */
+    --status-green: #4ade80;
+    --status-teal: #2dd4bf;
+    --status-red: #f43f5e;
+    --status-orange: #fb923c;
+
+    /* Ticket View Colors */
+    --zota-maroon: #9f1239;
+    /* Rose 800 */
+    --zota-peach: #fdba74;
+    /* Orange 300 */
+    --zota-lavender: #e879f9;
+    /* Fuchsia 400 */
+    --zota-total: #84cc16;
+    /* Lime 500 */
+    --zota-text-light: #f1f5f9;
+
+
+    /* Layout */
+    --header-height: 4rem;
+    --sidebar-width: 280px;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-attachment: fixed;
+    color: var(--foreground);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}

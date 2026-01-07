@@ -1,0 +1,10 @@
+@import './styles/design-system.css';
+@import './styles/zota-theme.css';
+@import './styles/components.css';
+
+/* Custom Global Reset overrides if any */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
