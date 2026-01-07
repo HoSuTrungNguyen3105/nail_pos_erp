@@ -4,13 +4,11 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import {
   Search,
-  Filter,
   ShoppingCart,
   TrendingUp,
   Star,
   Package,
   DollarSign,
-  BarChart3,
   Grid,
   List,
   SlidersHorizontal,
@@ -19,7 +17,7 @@ import {
   Heart,
   Plus
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 export default function Marketplace() {
   const categories = ['All', 'Gel Systems', 'Polish', 'Tools', 'Equipment', 'Accessories', 'Furniture', 'Consumables'];
@@ -158,14 +156,14 @@ export default function Marketplace() {
           <div className="flex items-center gap-3">
             <div className="flex bg-[var(--muted)] rounded-lg p-1">
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                variant={viewMode === 'grid' ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
               >
                 <Grid size={16} />
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                variant={viewMode === 'list' ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
               >
@@ -269,7 +267,7 @@ const ProductCard = ({ index, viewMode }: { index: number; viewMode: 'grid' | 'l
     originalPrice: 24.00 + (index * 5),
     rating: 4.5 + (Math.random() * 0.5),
     reviews: Math.floor(Math.random() * 500) + 10,
-    stock: Math.floor(Math.random() * 1000) + 50,
+    stock: index === 2 ? 0 : Math.floor(Math.random() * 1000) + 50, // Mock out of stock for index 2
     category: ['Gel Systems', 'Polish', 'Tools', 'Equipment', 'Accessories'][index % 5],
     brand: 'Zota Premium',
     discount: index % 3 === 0 ? 40 : 0,
@@ -290,6 +288,11 @@ const ProductCard = ({ index, viewMode }: { index: number; viewMode: 'grid' | 'l
               <span className="absolute top-1 left-1 bg-red-500 text-white text-xs px-2 py-1 rounded">
                 -{product.discount}%
               </span>
+            )}
+            {product.stock === 0 && (
+                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold px-2 py-1 border border-white rounded">OUT OF STOCK</span>
+                 </div>
             )}
           </div>
 
@@ -320,21 +323,28 @@ const ProductCard = ({ index, viewMode }: { index: number; viewMode: 'grid' | 'l
             <div className="flex items-center justify-between">
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-bold text-[var(--primary)]">${product.price.toFixed(2)}</span>
+                <span className="text-xs font-medium text-[var(--primary)] bg-[var(--primary)]/10 px-1.5 py-0.5 rounded">Wholesale</span>
                 {product.discount > 0 && (
                   <span className="text-sm text-[var(--muted-foreground)] line-through">
                     ${product.originalPrice.toFixed(2)}
                   </span>
                 )}
-                <span className="text-xs bg-green-500/10 text-green-600 px-2 py-1 rounded">
-                  {product.stock} in stock
-                </span>
+                {product.stock > 0 ? (
+                    <span className="text-xs bg-green-500/10 text-green-600 px-2 py-1 rounded">
+                      {product.stock} in stock
+                    </span>
+                ) : (
+                    <span className="text-xs bg-red-500/10 text-red-600 px-2 py-1 rounded font-bold">
+                      Out of Stock
+                    </span>
+                )}
               </div>
 
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">
                   <Heart size={16} />
                 </Button>
-                <Button size="sm">
+                <Button size="sm" disabled={product.stock === 0}>
                   <Plus size={16} className="mr-2" />
                   Add to Cart
                 </Button>
@@ -354,28 +364,36 @@ const ProductCard = ({ index, viewMode }: { index: number; viewMode: 'grid' | 'l
         </div>
 
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex gap-1">
+        <div className="absolute top-2 left-2 flex gap-1 z-10">
           {product.discount > 0 && (
             <span className="badge bg-red-500 text-white border-none">-{product.discount}%</span>
           )}
           {product.isNew && <span className="badge bg-blue-500 text-white border-none">New</span>}
           {product.isBestseller && <span className="badge bg-orange-500 text-white border-none">Hot</span>}
         </div>
+        
+        {product.stock === 0 && (
+             <div className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center">
+                <span className="text-white font-bold border-2 border-white px-4 py-2 rounded transform -rotate-12">OUT OF STOCK</span>
+             </div>
+        )}
 
         {/* Quick Actions */}
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
           <Button variant="ghost" size="sm" className="w-8 h-8 p-0 bg-white/90 hover:bg-white">
             <Heart size={16} />
           </Button>
         </div>
 
         {/* Quick Add Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/80 via-black/60 to-transparent">
-          <Button className="w-full bg-white text-black hover:bg-gray-100" size="sm">
-            <ShoppingCart size={16} className="mr-2" />
-            Add to Cart
-          </Button>
-        </div>
+        {product.stock > 0 && (
+            <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/80 via-black/60 to-transparent z-10">
+              <Button className="w-full bg-white text-black hover:bg-gray-100" size="sm">
+                <ShoppingCart size={16} className="mr-2" />
+                Add to Cart
+              </Button>
+            </div>
+        )}
       </div>
 
       <div className="p-4">
@@ -397,15 +415,22 @@ const ProductCard = ({ index, viewMode }: { index: number; viewMode: 'grid' | 'l
           <div>
             <div className="flex items-baseline gap-2">
               <span className="text-lg font-bold text-[var(--primary)]">${product.price.toFixed(2)}</span>
-              {product.discount > 0 && (
-                <span className="text-xs text-[var(--muted-foreground)] line-through">
-                  ${product.originalPrice.toFixed(2)}
-                </span>
-              )}
+              <span className="text-[10px] font-bold text-[var(--primary)] uppercase bg-[var(--primary)]/10 px-1 rounded">Wholesale</span>
             </div>
-            <p className="text-xs text-green-600 mt-0.5">{product.stock} in stock</p>
+            <div className="flex gap-2 items-center">
+                {product.discount > 0 && (
+                    <span className="text-xs text-[var(--muted-foreground)] line-through">
+                    ${product.originalPrice.toFixed(2)}
+                    </span>
+                )}
+                 {product.stock > 0 ? (
+                    <p className="text-xs text-green-600 mt-0.5">{product.stock} in stock</p>
+                 ) : (
+                    <p className="text-xs text-red-600 mt-0.5 font-bold">Out of stock</p>
+                 )}
+            </div>
           </div>
-          <Button size="sm" variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button size="sm" variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity" disabled={product.stock === 0}>
             <Eye size={16} />
           </Button>
         </div>

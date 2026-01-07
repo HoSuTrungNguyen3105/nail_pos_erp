@@ -37,7 +37,8 @@ function App() {
       </Route>
 
       {/* Provider Routes */}
-      <Route element={<RequireAuth allowedRoles={['admin', 'provider']} />}>
+      <Route>
+         {/* element={<RequireAuth allowedRoles={['admin', 'provider']} />} */}
         <Route path="/provider" element={<ProviderLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ProviderDashboard />} />

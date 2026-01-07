@@ -8,12 +8,10 @@ import {
   Wallet,
   ShoppingCart,
   Users,
-  TrendingUp,
-  TrendingDown,
+
+  TrendingDown, // Keep TrendingDown for Report Loss/Damage
   BarChart3,
-  PieChart,
   Download,
-  Calendar,
   Filter,
   RefreshCw,
   Eye,
@@ -22,12 +20,8 @@ import {
   Activity
 } from 'lucide-react';
 import {
-  AreaChart,
-  Area,
   BarChart,
   Bar,
-  LineChart,
-  Line,
   PieChart as RechartsPieChart,
   Pie,
   Cell,
@@ -37,7 +31,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ComposedChart
+  ComposedChart,
+  Line // Used in ComposedChart
 } from 'recharts';
 
 export default function Reports() {
@@ -169,6 +164,12 @@ export default function Reports() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Action Buttons */}
+          <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+             <TrendingDown size={16} className="mr-2" />
+             Report Loss/Damage
+          </Button>
+
           {/* Report Type Selector */}
           <div className="flex bg-[var(--card)] rounded-lg p-1">
             {reportTypes.map((type) => (

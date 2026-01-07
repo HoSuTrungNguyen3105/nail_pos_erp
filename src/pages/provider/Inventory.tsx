@@ -49,6 +49,47 @@ export default function Inventory() {
         </Card>
       </div>
 
+      {/* Order Workflow Section */}
+      <Card className="p-6 mb-6">
+        <h3 className="h3 mb-4">Active Orders Workflow</h3>
+        <div className="space-y-4">
+           {[1, 2].map((_, i) => (
+             <div key={i} className="border border-[var(--border)] rounded-lg p-4">
+               <div className="flex justify-between items-center mb-4">
+                 <div>
+                   <p className="font-bold">Order #ORD-2024-{100+i}</p>
+                   <p className="text-sm text-[var(--muted-foreground)]">Distributor: Nail Supply Co.</p>
+                 </div>
+                 <span className="badge bg-blue-100 text-blue-700 border-none">Processing</span>
+               </div>
+               {/* Stepper */}
+               <div className="relative flex items-center justify-between w-full mt-4">
+                 {['Received', 'Packing', 'Shipping', 'Completed'].map((step, idx) => {
+                   const stepStatus = i === 0 ? 1 : 2; // Mock progress
+                   const isActive = idx <= stepStatus;
+                   return (
+                     <div key={step} className="flex flex-col items-center relative z-10 w-1/4">
+                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                         isActive ? 'bg-[var(--primary)] text-white' : 'bg-[var(--muted)] text-[var(--muted-foreground)]'
+                       }`}>
+                         {idx + 1}
+                       </div>
+                       <span className={`text-xs mt-2 font-medium ${isActive ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>
+                         {step}
+                       </span>
+                     </div>
+                   );
+                 })}
+                 {/* Progress Bar background */}
+                 <div className="absolute top-4 left-0 h-0.5 bg-[var(--muted)] w-full -z-0" />
+                 {/* Progress Bar active */}
+                 <div className={`absolute top-4 left-0 h-0.5 bg-[var(--primary)] transition-all -z-0`} style={{ width: `${((i === 0 ? 1 : 2) / 3) * 100}%` }} />
+               </div>
+             </div>
+           ))}
+        </div>
+      </Card>
+
       <Card className="p-6">
         <div className="flex justify-between mb-6">
           <div className="relative w-96">
@@ -74,24 +115,37 @@ export default function Inventory() {
                 <th className="p-4 font-medium">Product</th>
                 <th className="p-4 font-medium">Location</th>
                 <th className="p-4 font-medium">Current Stock</th>
-                <th className="p-4 font-medium">Alert Threshold</th>
+                <th className="p-4 font-medium">Safety Threshold</th>
                 <th className="p-4 font-medium">Status</th>
                 <th className="p-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {[1, 2, 3, 4, 5].map((_, i) => (
-                <tr key={i} className="border-b border-[var(--border)] hover:bg-[var(--muted)]/50 transition-colors">
-                  <td className="p-4 font-medium">Gel Polish Type {String.fromCharCode(65 + i)}</td>
-                  <td className="p-4">Zone A-12</td>
-                  <td className="p-4">1,450</td>
-                  <td className="p-4">100</td>
-                  <td className="p-4"><span className="text-green-500 font-medium">In Stock</span></td>
-                  <td className="p-4 text-right">
-                    <Button variant="ghost" size="sm">Adjust</Button>
-                  </td>
-                </tr>
-              ))}
+              {[1, 2, 3, 4, 5].map((_, i) => {
+                const stock = i === 2 ? 8 : 1450;
+                const threshold = 10;
+                const isLowStock = stock < threshold;
+                return (
+                  <tr key={i} className={`border-b border-[var(--border)] transition-colors ${isLowStock ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[var(--muted)]/50'}`}>
+                    <td className="p-4 font-medium">Gel Polish Type {String.fromCharCode(65 + i)}</td>
+                    <td className="p-4">Zone A-12</td>
+                    <td className={`p-4 font-bold ${isLowStock ? 'text-red-600' : ''}`}>{stock}</td>
+                    <td className="p-4">{threshold}</td>
+                    <td className="p-4">
+                        {isLowStock ? (
+                            <span className="flex items-center gap-1 text-red-600 font-bold">
+                                <AlertTriangle size={14} /> Low Stock
+                            </span>
+                        ) : (
+                            <span className="text-green-500 font-medium">In Stock</span>
+                        )}
+                    </td>
+                    <td className="p-4 text-right">
+                      <Button variant="ghost" size="sm">Adjust</Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

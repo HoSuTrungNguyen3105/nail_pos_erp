@@ -28,6 +28,22 @@ export default function POS() {
           </Button>
         </div>
 
+        {/* Promotions / Combos */}
+        <div className="mb-4">
+             <h3 className="font-semibold mb-2">Active Promotions</h3>
+             <div className="flex gap-4 overflow-x-auto pb-2">
+                 {[
+                     { name: 'Buy 5 Gel Get 1 Top', code: 'PROMO-GEL5', color: 'bg-gradient-to-r from-pink-500 to-purple-500' },
+                     { name: 'Starter Kit Deal', code: 'KIT-START', color: 'bg-gradient-to-r from-blue-500 to-cyan-500' }
+                 ].map((promo, i) => (
+                     <button key={i} className={`flex-shrink-0 p-4 rounded-lg text-white ${promo.color} min-w-[200px] text-left hover:scale-[1.02] transition-transform`}>
+                         <p className="font-bold">{promo.name}</p>
+                         <p className="text-xs opacity-90 mt-1">{promo.code}</p>
+                     </button>
+                 ))}
+             </div>
+        </div>
+
         <div className="flex-1 overflow-y-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 pb-2">
            {/* Mock Quick Select Grid */}
            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, i) => (
