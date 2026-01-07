@@ -1,6 +1,11 @@
 @import './styles/design-system.css';
 @import './styles/zota-theme.css';
 @import './styles/components.css';
+/* @import './index.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom Global Reset overrides if any */
 *,

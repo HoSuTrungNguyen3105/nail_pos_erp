@@ -101,15 +101,16 @@ export const ProviderLayout = () => {
         </aside>
 
         {/* Content Outlet */}
-        <main className="flex-1 overflow-y-auto bg-gray-50/50 relative w-full"> 
-           {/* Header Title inside Main (Optional, keeping for context or verify if needed) */}
-           <div className="px-6 lg:px-8 py-6 pb-0 mb-6">
-              <h2 className="text-2xl font-bold text-[#1e1b4b]">{pageTitle}</h2>
-           </div>
+        <main className="flex-1 overflow-y-auto bg-gray-50/50 relative">
+          {/* Page Title - có padding riêng để đẹp */}
+          <div className="px-6 lg:px-8 pt-6 mb-6">
+            <h2 className="text-2xl font-bold text-[#1e1b4b]">{pageTitle}</h2>
+          </div>
 
-           <div className="w-full">
-              <Outlet />
-           </div>
+          {/* Outlet - full width 100%, không padding, không wrapper thừa */}
+          <div className="w-full h-full">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

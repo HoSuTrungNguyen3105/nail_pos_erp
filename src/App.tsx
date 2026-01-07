@@ -18,6 +18,7 @@ import Notifications from './pages/shared/Notifications';
 import { ZotaPosLayout } from './components/layout/ZotaPosLayout';
 import ZotaQueue from './pages/distributor/ZotaQueue';
 import ZotaTicket from './pages/distributor/ZotaTicket';
+import ZotaAppointment from './pages/distributor/ZotaAppointment';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
          <Route path="/pos-system" element={<ZotaPosLayout />}>
             <Route index element={<ZotaQueue />} />
             <Route path="ticket/:id" element={<ZotaTicket />} />
+            <Route path="appointment" element={<ZotaAppointment />} />
          </Route>
       </Route>
 
@@ -43,6 +45,7 @@ function App() {
           <Route path="inventory" element={<Inventory />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="notifications" element={<Notifications />} />
+                    {/* <Route path="distributors" element={<Distribu />} /> */}
         </Route>
       </Route>
 

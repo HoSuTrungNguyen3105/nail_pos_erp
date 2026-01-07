@@ -4,7 +4,10 @@ import { Search, Printer, HelpCircle, ArrowLeft } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function ZotaTicket() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('NAILS');
   
   // Mock Data mimicking the image
@@ -49,7 +52,7 @@ export default function ZotaTicket() {
         </div>
         
         <div className="flex items-center gap-2">
-           <Button className="bg-[#be123c] hover:bg-[#9f1239] text-white font-bold tracking-wider">COMBINE</Button>
+           <Button className="bg-[#be123c] hover:bg-[#9f1239] text-white font-bold tracking-wider" onClick={() => navigate('/pos-system/appointment')}>COMBINE</Button>
            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white"><HelpCircle size={24} /></Button>
            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white"><Search size={24} /></Button>
         </div>
