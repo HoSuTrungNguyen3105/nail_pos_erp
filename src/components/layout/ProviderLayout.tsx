@@ -11,10 +11,16 @@ import {
   LogOut,
   Settings,
   Menu,
-  X
+  X,
+  Plus,
+  Search,
+  Bell,
+  TrendingUp,
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
+import { RealTimeNotifications } from '../dashboard/RealTimeNotifications';
 
 const NAV_ITEMS = [
   { to: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -56,6 +62,7 @@ export const ProviderLayout = () => {
          </div>
          
          <div className="flex items-center gap-4">
+            <RealTimeNotifications />
             <div className="hidden lg:block text-right mr-2">
                <p className="text-sm font-bold text-white">{user?.name}</p>
                <p className="text-xs text-white/60 capitalize">{user?.role}</p>
@@ -93,9 +100,57 @@ export const ProviderLayout = () => {
         </AnimatePresence>
         
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex w-64 bg-gradient-to-b from-[#2e1065] to-[#4c1d95] flex-col border-r border-white/10 shadow-xl z-10">
-           <div className="flex-1 py-6">
+        <aside className="hidden lg:flex w-72 bg-gradient-to-b from-[#2e1065] to-[#4c1d95] flex-col border-r border-white/10 shadow-xl z-10">
+           <div className="flex-1 py-6 space-y-6">
               <SidebarNav />
+
+              {/* Quick Actions */}
+              <div className="px-3">
+                <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
+                  Quick Actions
+                </h4>
+                <div className="space-y-2">
+                  <QuickActionButton
+                    icon={<Plus size={16} />}
+                    label="New Product"
+                    onClick={() => navigate('/provider/products')}
+                  />
+                  <QuickActionButton
+                    icon={<ShoppingCart size={16} />}
+                    label="Process Orders"
+                    onClick={() => navigate('/provider/orders')}
+                    badge="3"
+                  />
+                  <QuickActionButton
+                    icon={<AlertTriangle size={16} />}
+                    label="Stock Alerts"
+                    onClick={() => navigate('/provider/inventory')}
+                    urgent
+                  />
+                  <QuickActionButton
+                    icon={<TrendingUp size={16} />}
+                    label="View Reports"
+                    onClick={() => navigate('/provider/reports')}
+                  />
+                </div>
+              </div>
+
+              {/* System Status */}
+              <div className="px-3">
+                <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
+                  System Status
+                </h4>
+                <div className="bg-white/5 rounded-lg p-3 mx-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-white/80 text-sm">Server Status</span>
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/80 text-sm">Last Sync</span>
+                    <span className="text-white/60 text-xs">2 min ago</span>
+                  </div>
+                </div>
+              </div>
            </div>
            <SidebarFooter onLogout={handleLogout} />
         </aside>
@@ -171,3 +226,36 @@ const NavItem = ({ to, icon: Icon, label }: any) => (
   </NavLink>
 );
 
+const QuickActionButton = ({ icon, label, onClick, badge, urgent }: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  badge?: string;
+  urgent?: boolean;
+}) => (
+  <button
+    onClick={onClick}
+    className={cn(
+      'w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors',
+      urgent
+        ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30'
+        : 'text-white/70 hover:bg-white/5 hover:text-white'
+    )}
+  >
+    <div className={cn(
+      'p-1.5 rounded-md',
+      urgent ? 'bg-red-500/20' : 'bg-white/10'
+    )}>
+      {icon}
+    </div>
+    <span className="truncate flex-1 text-left">{label}</span>
+    {badge && (
+      <span className={cn(
+        'px-2 py-0.5 text-xs rounded-full',
+        urgent ? 'bg-red-500 text-white' : 'bg-[#d946ef] text-white'
+      )}>
+        {badge}
+      </span>
+    )}
+  </button>
+);

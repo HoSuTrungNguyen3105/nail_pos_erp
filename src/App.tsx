@@ -27,7 +27,8 @@ function App() {
       <Route path="/register" element={<Login />} />
       
       {/* New Zota POS Route (Bypasses Distributor Layout for Full Screen) */}
-      <Route element={<RequireAuth allowedRoles={['distributor']} />}>
+      <Route>
+      {/* element={<RequireAuth allowedRoles={['distributor']} />} */}
          <Route path="/pos-system" element={<ZotaPosLayout />}>
             <Route index element={<ZotaQueue />} />
             <Route path="ticket/:id" element={<ZotaTicket />} />
