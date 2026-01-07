@@ -1,34 +1,48 @@
 import React from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import MuiButton from '@mui/material/Button';
+import type { ButtonProps as MuiButtonProps } from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
-interface ButtonProps extends HTMLMotionProps<'button'> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+// Override MUI's variant and size types with our custom ones
+interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'contained' | 'outlined' | 'text';
+  size?: 'sm' | 'md' | 'lg' | 'medium' | 'small' | 'large' | 'icon';
   isLoading?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, children, ...props }, ref) => {
+  ({ className, variant = 'contained', size = 'medium', isLoading, children, ...props }, ref) => {
+    // Map custom variants to MUI variants if needed, or use MUI defaults
+    const muiVariant = variant === 'primary' ? 'contained' : 
+                       variant === 'secondary' ? 'outlined' : 
+                       variant === 'ghost' ? 'text' : 
+                       variant === 'outline' ? 'outlined' : 
+                       (variant === 'contained' || variant === 'outlined' || variant === 'text') ? variant : 'contained';
+    
+    // Map size
+    const muiSize = size === 'md' ? 'medium' : 
+                    size === 'sm' ? 'small' : 
+                    size === 'lg' ? 'large' : 
+                    (size === 'medium' || size === 'small' || size === 'large') ? size : 'medium';
+
     return (
-      <motion.button
+      <MuiButton
         ref={ref}
-        whileTap={{ scale: 0.98 }}
-        className={cn(
-          'btn',
-          `btn-${variant}`,
-          size === 'sm' && 'text-xs px-2.5 py-1.5',
-          size === 'lg' && 'text-base px-6 py-3',
-          className
-        )}
+        variant={muiVariant}
+        size={muiSize}
         disabled={isLoading || props.disabled}
+        className={className} // MUI handles className forwarding, but styles might depend on sx
         {...props}
+        sx={{
+            // Add custom SX if needed for specific overrides not in theme
+            ...props.sx
+        }}
       >
         {isLoading ? (
-          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
         ) : null}
-        {children as React.ReactNode}
-      </motion.button>
+        {children}
+      </MuiButton>
     );
   }
 );
