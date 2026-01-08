@@ -45,125 +45,177 @@ export const ProviderLayout = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[var(--background)] overflow-hidden">
-      {/* Top Header - Full Width */}
-      <header className="h-16 bg-[#1e1b4b] text-white flex items-center justify-between px-4 lg:px-8 shrink-0 shadow-md z-50">
-         <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="lg:hidden text-white hover:bg-white/10" onClick={() => setOpen(true)}>
-              <Menu size={24} />
-            </Button>
-            <div className="flex items-center gap-3">
-               <div className="w-8 h-8 bg-gradient-to-tr from-[#d946ef] to-[#8b5cf6] rounded-lg flex items-center justify-center font-bold text-lg">Z</div>
-               <div>
-                 <h1 className="text-lg font-bold tracking-wide leading-none">Zota Provider</h1>
-                 <p className="text-[10px] text-white/60 tracking-widest uppercase">Nail Supply Management</p>
-               </div>
-            </div>
-         </div>
-         
-         <div className="flex items-center gap-4">
-            <RealTimeNotifications />
-            <div className="hidden lg:block text-right mr-2">
-               <p className="text-sm font-bold text-white">{user?.name}</p>
-               <p className="text-xs text-white/60 capitalize">{user?.role}</p>
-            </div>
-            <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10">
-               <Settings size={20} />
-            </Button>
-         </div>
-      </header>
-
-      {/* Main Layout Area */}
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* Mobile Sidebar Overlay */}
-        <AnimatePresence>
-          {open && (
+    <div className="flex h-screen bg-[var(--background)] overflow-hidden">
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-[60] lg:hidden"
+              onClick={() => setOpen(false)}
+            />
             <motion.div
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
-              transition={{ type: 'spring', damping: 20 }}
-              className="fixed inset-y-0 left-0 z-40 w-64 pt-16 lg:hidden"
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 z-[70] w-72 lg:hidden"
             >
                <div className="h-full bg-gradient-to-b from-[#2e1065] to-[#4c1d95] shadow-2xl border-r border-white/10 flex flex-col">
                   {/* Close Button for Mobile */}
-                  <div className="absolute top-4 right-4 lg:hidden">
+                  <div className="absolute top-4 right-4">
                     <Button variant="ghost" size="sm" onClick={() => setOpen(false)} className="text-white">
                       <X size={20} />
                     </Button>
                   </div>
-                  <SidebarNav />
+                  
+                  {/* Logo for Mobile */}
+                  <div className="p-6 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-tr from-[#d946ef] to-[#8b5cf6] rounded-lg flex items-center justify-center font-bold text-lg text-white">Z</div>
+                    <div>
+                      <h1 className="text-lg font-bold tracking-wide leading-none text-white">Zota Provider</h1>
+                      <p className="text-[10px] text-white/60 tracking-widest uppercase">Nail Supply Management</p>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto pt-2">
+                    <SidebarNav />
+                    
+                    {/* Mobile Quick Actions */}
+                    <div className="px-3 mt-8">
+                      <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
+                        Quick Actions
+                      </h4>
+                      <div className="space-y-2">
+                        <QuickActionButton
+                          icon={<Plus size={16} />}
+                          label="New Product"
+                          onClick={() => { navigate('/provider/products'); setOpen(false); }}
+                        />
+                        <QuickActionButton
+                          icon={<ShoppingCart size={16} />}
+                          label="Process Orders"
+                          onClick={() => { navigate('/provider/orders'); setOpen(false); }}
+                          badge="3"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <SidebarFooter onLogout={handleLogout} />
                </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex w-72 bg-gradient-to-b from-[#2e1065] to-[#4c1d95] flex-col border-r border-white/10 shadow-xl z-10">
-           <div className="flex-1 py-6 space-y-6">
-              <SidebarNav />
+          </>
+        )}
+      </AnimatePresence>
+      
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-72 bg-gradient-to-b from-[#2e1065] to-[#4c1d95] flex-col border-r border-white/10 shadow-xl z-10 shrink-0">
+         {/* Logo Area */}
+         <div className="p-6 flex items-center gap-3 border-b border-white/5">
+            <div className="w-8 h-8 bg-gradient-to-tr from-[#d946ef] to-[#8b5cf6] rounded-lg flex items-center justify-center font-bold text-lg text-white">Z</div>
+            <div>
+              <h1 className="text-lg font-bold tracking-wide leading-none text-white">Zota Provider</h1>
+              <p className="text-[10px] text-white/60 tracking-widest uppercase">Nail Supply Management</p>
+            </div>
+         </div>
 
-              {/* Quick Actions */}
-              <div className="px-3">
-                <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
-                  Quick Actions
-                </h4>
-                <div className="space-y-2">
-                  <QuickActionButton
-                    icon={<Plus size={16} />}
-                    label="New Product"
-                    onClick={() => navigate('/provider/products')}
-                  />
-                  <QuickActionButton
-                    icon={<ShoppingCart size={16} />}
-                    label="Process Orders"
-                    onClick={() => navigate('/provider/orders')}
-                    badge="3"
-                  />
-                  <QuickActionButton
-                    icon={<AlertTriangle size={16} />}
-                    label="Stock Alerts"
-                    onClick={() => navigate('/provider/inventory')}
-                    urgent
-                  />
-                  <QuickActionButton
-                    icon={<TrendingUp size={16} />}
-                    label="View Reports"
-                    onClick={() => navigate('/provider/reports')}
-                  />
+         <div className="flex-1 py-8 space-y-8 overflow-y-auto">
+            <SidebarNav />
+
+            {/* Quick Actions */}
+            <div className="px-3">
+              <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
+                Quick Actions
+              </h4>
+              <div className="space-y-2">
+                <QuickActionButton
+                  icon={<Plus size={16} />}
+                  label="New Product"
+                  onClick={() => navigate('/provider/products')}
+                />
+                <QuickActionButton
+                  icon={<ShoppingCart size={16} />}
+                  label="Process Orders"
+                  onClick={() => navigate('/provider/orders')}
+                  badge="3"
+                />
+                <QuickActionButton
+                  icon={<AlertTriangle size={16} />}
+                  label="Stock Alerts"
+                  onClick={() => navigate('/provider/inventory')}
+                  urgent
+                />
+                <QuickActionButton
+                  icon={<TrendingUp size={16} />}
+                  label="View Reports"
+                  onClick={() => navigate('/provider/reports')}
+                />
+              </div>
+            </div>
+
+            {/* System Status */}
+            <div className="px-3">
+              <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
+                System Status
+              </h4>
+              <div className="bg-white/5 rounded-lg p-3 mx-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-white/80 text-sm">Server Status</span>
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-white/80 text-sm">Last Sync</span>
+                  <span className="text-white/60 text-xs">2 min ago</span>
                 </div>
               </div>
+            </div>
+         </div>
+         <SidebarFooter onLogout={handleLogout} />
+      </aside>
 
-              {/* System Status */}
-              <div className="px-3">
-                <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
-                  System Status
-                </h4>
-                <div className="bg-white/5 rounded-lg p-3 mx-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-white/80 text-sm">Server Status</span>
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/80 text-sm">Last Sync</span>
-                    <span className="text-white/60 text-xs">2 min ago</span>
-                  </div>
+      {/* Content Wrapper */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header - Now inside the right area */}
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shrink-0 z-20">
+           <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" className="lg:hidden text-gray-500 hover:bg-gray-100" onClick={() => setOpen(true)}>
+                <Menu size={24} />
+              </Button>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 leading-tight">{pageTitle}</h2>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <span>Provider Portal</span>
+                  <span>•</span>
+                  <span className="capitalize">{user?.role}</span>
                 </div>
               </div>
            </div>
-           <SidebarFooter onLogout={handleLogout} />
-        </aside>
+           
+           <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-2 mr-4 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
+                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                 <span className="text-xs font-medium text-gray-600">System Live</span>
+              </div>
+              
+              <RealTimeNotifications />
+              
+              <div className="hidden sm:block text-right mr-2 border-l border-gray-100 pl-4">
+                 <p className="text-sm font-bold text-gray-900 leading-none mb-1">{user?.name}</p>
+                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Store ID: #8829</p>
+              </div>
+              
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#2e1065] hover:bg-[#2e1065]/5">
+                 <Settings size={20} />
+              </Button>
+           </div>
+        </header>
 
-        {/* Content Outlet */}
-        <main className="flex-1 overflow-y-auto bg-gray-50/50 relative">
-          {/* Page Title - có padding riêng để đẹp */}
-          <div className="px-6 lg:px-8 pt-6 mb-6">
-            <h2 className="text-2xl font-bold text-[#1e1b4b]">{pageTitle}</h2>
-          </div>
-
-          {/* Outlet - full width 100%, không padding, không wrapper thừa */}
-          <div className="w-full h-full">
+        {/* Main Content Scrollable Area */}
+        <main className="flex-1 overflow-y-auto bg-[#f8fafc] relative">
+          <div className="p-4 lg:p-8">
             <Outlet />
           </div>
         </main>

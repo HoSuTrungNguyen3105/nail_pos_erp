@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/auth/Login';
-import { RequireAuth } from './components/auth/RequireAuth';
 import { ProviderLayout } from './components/layout/ProviderLayout';
 import ProviderDashboard from './pages/provider/Dashboard';
 import ProductManagement from './pages/provider/ProductManagement';
@@ -14,6 +13,9 @@ import Reports from './pages/distributor/Reports';
 import CRM from './pages/distributor/CRM';
 import UserProfile from './pages/shared/Profile';
 import Notifications from './pages/shared/Notifications';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import TailAdminDashboard from './pages/admin/dashboard';
+import { AdminLayout } from './components/layout/AdminLayout';
 
 import { ZotaPosLayout } from './components/layout/ZotaPosLayout';
 import ZotaQueue from './pages/distributor/ZotaQueue';
@@ -64,6 +66,12 @@ function App() {
           <Route path="profile" element={<UserProfile />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<TailAdminDashboard />} />
+        <Route path="old-dashboard" element={<AdminDashboard />} />
       </Route>
 
       {/* Fallback */}

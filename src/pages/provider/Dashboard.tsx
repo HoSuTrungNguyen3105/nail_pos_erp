@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { CustomizableDashboard } from '../../components/dashboard/CustomizableDashboard';
 import { MetricWidget } from '../../components/dashboard/MetricWidget';
@@ -8,30 +7,20 @@ import { DashboardWidget, type WidgetConfig } from '../../components/dashboard/D
 import {
   BarChart3,
   TrendingUp,
-  Package,
-  AlertCircle,
   DollarSign,
   Users,
   ShoppingCart,
   Activity,
   RefreshCw,
   Download,
-  Settings,
   Eye,
   Clock,
   CheckCircle,
   AlertTriangle,
-  TrendingDown,
-  Target,
-  Zap
 } from 'lucide-react';
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -40,8 +29,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
-  ComposedChart
 } from 'recharts';
 
 // Enhanced KPI data with more metrics
@@ -141,7 +128,7 @@ const activityData = [
 ];
 
 export default function ProviderDashboard() {
-  const [timeRange, setTimeRange] = useState('7d');
+  const [_, setTimeRange] = useState('7d');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [dashboardWidgets, setDashboardWidgets] = useState<WidgetConfig[]>([
     {
