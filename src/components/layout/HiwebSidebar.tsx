@@ -170,6 +170,17 @@ const HiwebSidebar: React.FC = () => {
     return false;
   }, [location.pathname]);
 
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+      if (window.innerWidth >= 1024) setIsMobileOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Determine if a parent section should be open based on children
   useEffect(() => {
     SidebarData.forEach(section => {
@@ -202,17 +213,12 @@ const HiwebSidebar: React.FC = () => {
     setIsMobileOpen(!isMobileOpen);
   };
 
-  // Modern Theme Colors (matching theme.ts)
-  // Primary: #d946ef (Fuchsia 500)
-  // Secondary: #2dd4bf (Teal 400)
-  // Bg Dark: #2e1065 (Slate 900 / Deep Purple)
-
   return (
     <div className="flex h-screen bg-[#2e1065] overflow-hidden font-sans text-slate-100">
       
       {/* Mobile Overlay */}
       <AnimatePresence>
-        {isMobileOpen && (
+        {isMobileOpen && !isDesktop && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -226,22 +232,14 @@ const HiwebSidebar: React.FC = () => {
       {/* Sidebar */}
       <motion.aside 
         className={`
-          fixed lg:static inset-y-0 left-0 z-50
+          fixed inset-y-0 left-0 z-50
           w-72 bg-[#2e1065] border-r border-white/10
           flex flex-col
           shadow-2xl shadow-purple-900/20
         `}
         initial={false}
-        animate={{ x: isMobileOpen ? 0 : 0 }} 
-        // Note: Mobile toggle logic needs to be handled via CSS media queries or width changes if we want to support fully closing on mobile
-        style={{ 
-          transform: isMobileOpen ? 'translateX(0)' : undefined // Handled by class on desktop
-        }}
-        variants={{
-          open: { x: 0 },
-          closed: { x: "-100%" }
-        }}
-        // On mobile, default to closed (need to add logic check for window width usually, but CSS hidden class helps)
+        animate={{ x: isDesktop ? 0 : (isMobileOpen ? 0 : "-100%") }}
+        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
       >
         {/* Logo Area */}
         <div className="h-20 flex items-center gap-3 px-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
@@ -390,7 +388,7 @@ const HiwebSidebar: React.FC = () => {
       </motion.aside>
 
       {/* Main Content Wrapper (Right Side) */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-[#2e1065] relative">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-[#2e1065] relative lg:ml-72 transition-all duration-300">
         {/* Background Gradients for Glassmorphism Effect */}
         <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px] opacity-30 pointer-events-none" />
         <div className="absolute bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-teal-600/10 rounded-full blur-[100px] opacity-20 pointer-events-none" />

@@ -34,29 +34,21 @@ const TailAdminDashboard: React.FC = () => {
             <StatsCard
               title="Customers"
               value="3,782"
-              change="11.01%"
-              isPositive={true}
               icon={<Users className="w-6 h-6 text-blue-400" />}
             />
             <StatsCard
               title="Orders"
               value="5,359"
-              change="9.05%"
-              isPositive={false}
               icon={<ShoppingCart className="w-6 h-6 text-fuchsia-400" />}
             />
             <StatsCard
               title="Revenue"
               value="$48,392"
-              change="21.4%"
-              isPositive={true}
               icon={<DollarSign className="w-6 h-6 text-teal-400" />}
             />
             <StatsCard
               title="Conversion Rate"
               value="3.24%"
-              change="4.2%"
-              isPositive={true}
               icon={<TrendingUp className="w-6 h-6 text-purple-400" />}
             />
           </div>
