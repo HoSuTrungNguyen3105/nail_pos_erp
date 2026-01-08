@@ -21,6 +21,7 @@ import { ZotaPosLayout } from './components/layout/ZotaPosLayout';
 import ZotaQueue from './pages/distributor/ZotaQueue';
 import ZotaTicket from './pages/distributor/ZotaTicket';
 import ZotaAppointment from './pages/distributor/ZotaAppointment';
+import HiwebSidebar from './components/layout/HiwebSidebar';
 
 function App() {
   return (
@@ -69,8 +70,34 @@ function App() {
       </Route>
 
       {/* Admin Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<TailAdminDashboard />} />
+        <Route path="old-dashboard" element={<AdminDashboard />} />
+      </Route> */}
+
+      <Route path="/admin" element={<HiwebSidebar />}>
+        {/* Dashboard Routes */}
+        <Route index element={<TailAdminDashboard />} />
+        <Route path="ecommerce" element={<TailAdminDashboard />} />
+        <Route path="analytics" element={<TailAdminDashboard />} />
+        
+        {/* Task Routes */}
+        <Route path="task" element={<TailAdminDashboard />} />
+        <Route path="forms" element={<TailAdminDashboard />} />
+        <Route path="forms/elements" element={<TailAdminDashboard />} />
+        <Route path="forms/layout" element={<TailAdminDashboard />} />
+        
+        {/* Pages Routes */}
+        <Route path="settings" element={<TailAdminDashboard />} />
+        <Route path="tables" element={<TailAdminDashboard />} />
+        
+        {/* Support Routes */}
+        <Route path="messages" element={<TailAdminDashboard />} />
+        <Route path="auth" element={<TailAdminDashboard />} />
+        <Route path="auth/signin" element={<TailAdminDashboard />} />
+        <Route path="auth/signup" element={<TailAdminDashboard />} />
+        
+        {/* Legacy */}
         <Route path="old-dashboard" element={<AdminDashboard />} />
       </Route>
 

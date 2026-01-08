@@ -65,7 +65,7 @@ export const AdminLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden font-sans">
+    <div className="flex h-screen">
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {open && (
