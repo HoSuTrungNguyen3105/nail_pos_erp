@@ -1,0 +1,191 @@
+/* Admin Dashboard Variables */
+:root {
+    --admin-bg-dark: #2e1065;
+    --admin-sidebar-width: 288px;
+    /* 72 * 4px */
+    --admin-primary: #d946ef;
+    /* Fuchsia 500 */
+    --admin-secondary: #2dd4bf;
+    /* Teal 400 */
+    --admin-text-main: #f1f5f9;
+    --admin-text-muted: #94a3b8;
+    --admin-border: rgba(255, 255, 255, 0.1);
+    --admin-glass-bg: rgba(255, 255, 255, 0.05);
+    --admin-glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Global Admin Resets */
+.admin-wrapper {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--admin-text-main);
+    background-color: var(--admin-bg-dark);
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Utilities */
+.admin-glass {
+    background: var(--admin-glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--admin-border);
+}
+
+.admin-flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.admin-flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-slate-400 {
+    color: #94a3b8;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.rounded-xl {
+    border-radius: 0.75rem;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+/* Sidebar Styles */
+.admin-sidebar {
+    width: var(--admin-sidebar-width);
+    background-color: var(--admin-bg-dark);
+    border-right: 1px solid var(--admin-border);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.admin-sidebar.mobile-closed {
+    transform: translateX(-100%);
+}
+
+.admin-logo-area {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--admin-border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 16px;
+}
+
+.admin-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    color: var(--admin-text-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.admin-menu-item:hover,
+.admin-menu-item.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.admin-menu-item.active {
+    background: linear-gradient(90deg, rgba(217, 70, 239, 0.2) 0%, transparent 100%);
+}
+
+/* Dashboard Content */
+.admin-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--admin-bg-dark);
+    margin-left: var(--admin-sidebar-width);
+    /* Desktop default */
+    min-height: 100vh;
+    position: relative;
+}
+
+@media (max-width: 1024px) {
+    .admin-content {
+        margin-left: 0;
+    }
+}
+
+.admin-header {
+    height: 80px;
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-main {
+    padding: 32px;
+}
+
+/* Grid System */
+.admin-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+}
+
+@media (min-width: 640px) {
+    .admin-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .admin-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Stats Card */
+.stats-card {
+    background-color: #4a044e;
+    /* Deep purple */
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 15px -3px rgba(162, 28, 175, 0.2);
+    transition: transform 0.2s;
+}
+
+.stats-card:hover {
+    transform: scale(1.02);
+}
