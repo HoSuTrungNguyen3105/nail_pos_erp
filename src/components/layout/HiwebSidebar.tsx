@@ -243,9 +243,6 @@ const HiwebSidebar: React.FC = () => {
       >
         {/* Logo Area */}
         <div className="h-20 flex items-center gap-3 px-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/30">
-            <span className="text-white font-bold text-xl">H</span>
-          </div>
           <div>
             <h1 className="font-bold text-lg tracking-wide text-white">Hiweb Admin</h1>
             <p className="text-xs text-fuchsia-300/80 font-medium">ERP System v1.0</p>
@@ -253,16 +250,16 @@ const HiwebSidebar: React.FC = () => {
         </div>
 
         {/* Scrollable Nav */}
-        <nav ref={scrollRef} className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+        <nav ref={scrollRef} className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
           {SidebarData.map((section, idx) => (
-            <div key={idx} className="mb-6 last:mb-0">
+            <div key={idx} className="mb-5 last:mb-0">
               {section.submenuHdr && (
-                <div className="px-3 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div className="px-3 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   {section.label}
                 </div>
               )}
 
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {section.submenuItems?.map((item, itemIdx) => {
                   const isActive = isMenuItemActive(item) || 
                     item.submenuItems?.some(sub => isMenuItemActive(sub));
@@ -276,25 +273,25 @@ const HiwebSidebar: React.FC = () => {
                           <button
                             onClick={() => toggleMain(item.label)}
                             className={`
-                              w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group
+                              w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 group
                               ${isActive || isExpanded
-                                ? 'bg-white/10 text-white' 
-                                : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                                ? 'bg-gradient-to-r from-fuchsia-500/15 to-purple-500/10 text-white shadow-sm' 
+                                : 'text-slate-400 hover:bg-white/5 hover:text-white hover:shadow-sm'
                               }
                             `}
                           >
                             <div className="flex items-center gap-3">
                               <span className={`
-                                transition-colors duration-200
-                                ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-400'}
+                                transition-all duration-300 transform
+                                ${isActive ? 'text-fuchsia-400 scale-110' : 'text-slate-400 group-hover:text-fuchsia-400 group-hover:scale-105'}
                               `}>
                                 {item.icon}
                               </span>
-                              <span className="font-medium">{item.label}</span>
+                              <span className="font-medium text-sm">{item.label}</span>
                             </div>
                             <ChevronRight 
                               size={16} 
-                              className={`transition-transform duration-200 ${isExpanded ? 'rotate-90 text-fuchsia-400' : 'text-slate-500'}`}
+                              className={`transition-all duration-300 ${isExpanded ? 'rotate-90 text-fuchsia-400' : 'text-slate-500 group-hover:text-slate-300'}`}
                             />
                           </button>
 
@@ -305,8 +302,8 @@ const HiwebSidebar: React.FC = () => {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2, ease: "easeInOut" }}
-                                className="overflow-hidden pl-4 mt-1 space-y-1 border-l border-white/10 ml-5"
+                                transition={{ duration: 0.25, ease: "easeInOut" }}
+                                className="overflow-hidden pl-3 mt-1 space-y-0.5 border-l-2 border-fuchsia-500/30 ml-6"
                               >
                                 {item.submenuItems.map((sub, subIdx) => {
                                   const isSubActive = isMenuItemActive(sub);
@@ -317,18 +314,19 @@ const HiwebSidebar: React.FC = () => {
                                         to={sub.link || '#'}
                                         onClick={() => setIsMobileOpen(false)}
                                         className={`
-                                          block px-3 py-2 rounded-lg text-sm transition-all duration-200 relative
+                                          block px-3 py-2 rounded-lg text-sm transition-all duration-300 relative group
                                           ${isSubActive 
-                                            ? 'text-teal-400 bg-teal-400/10 font-medium' 
-                                            : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                                            ? 'text-teal-400 bg-teal-400/15 font-medium shadow-sm' 
+                                            : 'text-slate-400 hover:text-white hover:bg-white/5 hover:pl-4'
                                           }
                                         `}
                                       >
-                                        {sub.label}
+                                        <span className="relative z-10">{sub.label}</span>
                                         {isSubActive && (
                                           <motion.div
                                             layoutId="activeIndicator"
-                                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[17px] w-1.5 h-1.5 rounded-full bg-teal-400"
+                                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[13px] w-2 h-2 rounded-full bg-teal-400 shadow-lg shadow-teal-400/50"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                           />
                                         )}
                                       </Link>
@@ -345,23 +343,27 @@ const HiwebSidebar: React.FC = () => {
                           to={item.link || '#'}
                           onClick={() => setIsMobileOpen(false)}
                           className={`
-                            flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative overflow-hidden
+                            flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group relative overflow-hidden
                             ${isActive 
-                              ? 'bg-gradient-to-r from-fuchsia-500/20 to-transparent text-white' 
-                              : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                              ? 'bg-gradient-to-r from-fuchsia-500/15 to-purple-500/10 text-white shadow-sm' 
+                              : 'text-slate-400 hover:bg-white/5 hover:text-white hover:shadow-sm'
                             }
                           `}
                         >
                           {isActive && (
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-fuchsia-500 rounded-full" />
+                            <motion.div 
+                              layoutId="activeBorder"
+                              className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-fuchsia-500 to-purple-500 rounded-r-full shadow-lg shadow-fuchsia-500/50"
+                              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                            />
                           )}
                           <span className={`
-                            transition-colors duration-200
-                            ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-400'}
+                            transition-all duration-300 transform
+                            ${isActive ? 'text-fuchsia-400 scale-110' : 'text-slate-400 group-hover:text-fuchsia-400 group-hover:scale-105'}
                           `}>
                             {item.icon}
                           </span>
-                          <span className="font-medium">{item.label}</span>
+                          <span className="font-medium text-sm">{item.label}</span>
                         </Link>
                       )}
                     </li>
@@ -391,7 +393,6 @@ const HiwebSidebar: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-[#2e1065] relative lg:ml-72 transition-all duration-300">
         {/* Background Gradients for Glassmorphism Effect */}
         <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px] opacity-30 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -z-10 w-[500px] h-[500px] bg-teal-600/10 rounded-full blur-[100px] opacity-20 pointer-events-none" />
 
         {/* Top Header */}
         <header className="h-20 flex items-center justify-between px-8 border-b border-white/10 bg-white/5 backdrop-blur-md shrink-0 z-10 transition-all duration-300">
@@ -407,7 +408,7 @@ const HiwebSidebar: React.FC = () => {
 
           <div className="flex items-center gap-6">
             {/* Search Bar (Visual) */}
-            <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 focus-within:bg-white/10 focus-within:border-fuchsia-500/50 transition-all duration-300 w-64">
+            <div className="md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 focus-within:bg-white/10 focus-within:border-fuchsia-500/50 transition-all duration-300 w-64">
               <Search size={18} className="text-slate-400" />
               <input 
                 type="text" 
@@ -419,12 +420,9 @@ const HiwebSidebar: React.FC = () => {
             <div className="flex items-center gap-4">
                <button className="relative p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-full transition-colors">
                   <Bell size={20} />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border border-purple-900"></span>
                </button>
-               <div className="h-8 w-px bg-white/10 mx-1"></div>
                <div className="flex items-center gap-3">
                   <div className="text-right hidden sm:block">
-                     <p className="text-sm font-medium text-white">Admin</p>
                      <p className="text-xs text-fuchsia-400">Super Admin</p>
                   </div>
                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 p-[1px] ring-2 ring-white/10">
@@ -438,8 +436,8 @@ const HiwebSidebar: React.FC = () => {
         </header>
 
         {/* Scrollable Main Content */}
-        <main className="flex-1 overflow-y-auto p-8 scroll-smooth custom-scrollbar">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="main-content">
+          <div className="max-width">
             <Outlet />
           </div>
         </main>
@@ -459,6 +457,24 @@ const HiwebSidebar: React.FC = () => {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: rgba(217, 70, 239, 0.4);
+        }
+
+        .main-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 24px 24px 24px 24px;
+          scroll-behavior: smooth;
+          margin-left: 250px !important;
+        }
+
+        /* thay cho max-w-7xl mx-auto */
+        .max-width {
+          max-width: 100%;
+          width: 100%;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
         }
       `}</style>
     </div>
