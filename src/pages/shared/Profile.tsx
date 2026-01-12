@@ -1,112 +1,380 @@
 import React, { useState } from 'react';
-import { Card } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+import {
+  Box,
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  TextField,
+  Avatar,
+  Tabs,
+  Tab,
+  Divider,
+  alpha,
+  Stack,
+  IconButton,
+  Grid
+} from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-import { User, Lock, Bell, Shield } from 'lucide-react';
+import { User, Lock, Bell, Shield, Camera } from 'lucide-react';
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: string;
+  value: string;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`profile-tabpanel-${index}`}
+      aria-labelledby={`profile-tab-${index}`}
+      {...other}
+      style={{ width: '100%' }}
+    >
+      {value === index && (
+        <Box>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
 export default function UserProfile() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('general');
 
+  const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="h2">Account Settings</h1>
-        <p className="text-[var(--muted-foreground)]">Manage your profile and security preferences.</p>
-      </div>
+    <Container maxWidth="lg" sx={{ py: 2 }}>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', mb: 1 }}>
+          Account Settings
+        </Typography>
+        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+          Manage your profile and security preferences.
+        </Typography>
+      </Box>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar Nav */}
-        <Card className="w-full md:w-64 p-2 h-fit">
-          <nav className="flex flex-col space-y-1">
-            <NavButton active={activeTab === 'general'} onClick={() => setActiveTab('general')} icon={<User size={18} />} label="General" />
-            <NavButton active={activeTab === 'security'} onClick={() => setActiveTab('security')} icon={<Lock size={18} />} label="Security" />
-            <NavButton active={activeTab === 'notifications'} onClick={() => setActiveTab('notifications')} icon={<Bell size={18} />} label="Notifications" />
-          </nav>
-        </Card>
+      <Grid container spacing={2}>
+        {/* Navigation Sidebar */}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <Card
+            sx={{
+              background: 'rgba(30, 41, 59, 0.4)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 4,
+              p: 1
+            }}
+          >
+            <Tabs
+              orientation="vertical"
+              value={activeTab}
+              onChange={handleTabChange}
+              sx={{
+                '& .MuiTabs-indicator': {
+                  display: 'none',
+                },
+                '& .MuiTab-root': {
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                  textTransform: 'none',
+                  minHeight: 48,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  '&.Mui-selected': {
+                    color: '#fff',
+                    bgcolor: 'rgba(217, 70, 239, 0.1)',
+                    '& svg': { color: '#d946ef' }
+                  },
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.05)',
+                    color: '#fff'
+                  }
+                }
+              }}
+            >
+              <Tab
+                value="general"
+                label="General"
+                icon={<User size={18} />}
+                iconPosition="start"
+              />
+              <Tab
+                value="security"
+                label="Security"
+                icon={<Lock size={18} />}
+                iconPosition="start"
+              />
+              <Tab
+                value="notifications"
+                label="Notifications"
+                icon={<Bell size={18} />}
+                iconPosition="start"
+              />
+            </Tabs>
+          </Card>
+        </Grid>
 
-        {/* Content */}
-        <div className="flex-1 space-y-6">
-          {activeTab === 'general' && (
-            <Card className="p-6 space-y-6">
-              <h3 className="h3">Profile Information</h3>
-              <div className="flex items-center gap-6">
-                <div className="h-20 w-20 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] text-2xl font-bold">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                    <Button variant="outline" size="sm">Change Avatar</Button>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Full Name" defaultValue={user?.name} />
-                <Input label="Email Address" defaultValue={user?.email} disabled />
-                <Input label="Phone Number" defaultValue="+1 (555) 000-0000" />
-                <Input label="Role" defaultValue={user?.role} disabled />
-              </div>
-              
-              <div className="flex justify-end">
-                <Button>Save Changes</Button>
-              </div>
+        {/* Content Area */}
+        <Grid size={{ xs: 12, md: 9 }}>
+          <TabPanel value={activeTab} index="general">
+            <Card
+              sx={{
+                background: 'rgba(30, 41, 59, 0.4)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 4,
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', mb: 4 }}>
+                  Profile Information
+                </Typography>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 4, mb: 6 }}>
+                  <Box sx={{ position: 'relative' }}>
+                    <Avatar
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        background: 'linear-gradient(135deg, #d946ef, #7c3aed)',
+                        fontSize: '2.5rem',
+                        fontWeight: 800,
+                        boxShadow: '0 0 0 4px rgba(217, 70, 239, 0.1)'
+                      }}
+                    >
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <IconButton
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        right: 0,
+                        bgcolor: '#d946ef',
+                        color: '#fff',
+                        '&:hover': { bgcolor: '#c026d3' },
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                        border: '2px solid #0f172a'
+                      }}
+                    >
+                      <Camera size={14} />
+                    </IconButton>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff' }}>
+                      Profile Photo
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+                      Update your avatar and personal details
+                    </Typography>
+                    <Button variant="outlined" size="small" sx={{ borderRadius: 2, textTransform: 'none' }}>
+                      Change Avatar
+                    </Button>
+                  </Box>
+                </Box>
+
+                <Grid container spacing={3}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      fullWidth
+                      label="Full Name"
+                      defaultValue={user?.name}
+                      variant="outlined"
+                      slotProps={{
+                        input: { sx: { borderRadius: 3, bgcolor: 'rgba(255,255,255,0.02)' } }
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      fullWidth
+                      label="Email Address"
+                      defaultValue={user?.email}
+                      disabled
+                      variant="outlined"
+                      slotProps={{
+                        input: { sx: { borderRadius: 3, bgcolor: 'rgba(255,255,255,0.01)' } }
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      fullWidth
+                      label="Phone Number"
+                      defaultValue="+1 (555) 000-0000"
+                      variant="outlined"
+                      slotProps={{
+                        input: { sx: { borderRadius: 3, bgcolor: 'rgba(255,255,255,0.02)' } }
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      fullWidth
+                      label="Role"
+                      defaultValue={user?.role}
+                      disabled
+                      variant="outlined"
+                      slotProps={{
+                        input: { sx: { borderRadius: 3, bgcolor: 'rgba(255,255,255,0.01)' } }
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: 3,
+                      px: 4,
+                      py: 1,
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #d946ef, #7c3aed)',
+                      '&:hover': {
+                        boxShadow: '0 8px 16px rgba(217, 70, 239, 0.4)'
+                      }
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </Box>
+              </CardContent>
             </Card>
-          )}
+          </TabPanel>
 
-          {activeTab === 'security' && (
-            <Card className="p-6 space-y-6">
-               <h3 className="h3">Security</h3>
-               <div className="space-y-4">
-                 <div className="flex items-center justify-between p-4 border rounded-lg border-[var(--border)]">
-                   <div className="flex items-center gap-4">
-                     <div className="p-2 bg-blue-500/10 text-blue-500 rounded">
-                       <Lock size={20} />
-                     </div>
-                     <div>
-                       <p className="font-medium">Password</p>
-                       <p className="text-sm text-[var(--muted-foreground)]">Last changed 3 months ago</p>
-                     </div>
-                   </div>
-                   <Button variant="outline" size="sm">Change</Button>
-                 </div>
+          <TabPanel value={activeTab} index="security">
+            <Card
+              sx={{
+                background: 'rgba(30, 41, 59, 0.4)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 4,
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', mb: 4 }}>
+                  Security Settings
+                </Typography>
 
-                 <div className="flex items-center justify-between p-4 border rounded-lg border-[var(--border)]">
-                   <div className="flex items-center gap-4">
-                     <div className="p-2 bg-green-500/10 text-green-500 rounded">
-                       <Shield size={20} />
-                     </div>
-                     <div>
-                       <p className="font-medium">Two-Factor Authentication</p>
-                       <p className="text-sm text-[var(--muted-foreground)]">Add an extra layer of security</p>
-                     </div>
-                   </div>
-                   <Button variant="outline" size="sm">Enable</Button>
-                 </div>
-               </div>
+                <Stack spacing={3}>
+                  <SecurityItem
+                    icon={<Lock size={20} />}
+                    iconColor="#3b82f6"
+                    title="Password"
+                    subtitle="Last changed 3 months ago"
+                    actionLabel="Change"
+                  />
+                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)' }} />
+                  <SecurityItem
+                    icon={<Shield size={20} />}
+                    iconColor="#22c55e"
+                    title="Two-Factor Authentication"
+                    subtitle="Add an extra layer of security to your account"
+                    actionLabel="Enable"
+                  />
+                </Stack>
+              </CardContent>
             </Card>
-          )}
-          
-          {activeTab === 'notifications' && (
-             <Card className="p-6 text-center py-12 text-[var(--muted-foreground)]">
-                Notifications settings placeholder
-             </Card>
-          )}
-        </div>
-      </div>
-    </div>
+          </TabPanel>
+
+          <TabPanel value={activeTab} index="notifications">
+            <Card
+              sx={{
+                background: 'rgba(30, 41, 59, 0.4)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 4,
+                py: 10
+              }}
+            >
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(255, 255, 255, 0.03)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
+                    mb: 2,
+                    color: 'text.disabled'
+                  }}
+                >
+                  <Bell size={32} />
+                </Box>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  Notification settings are coming soon.
+                </Typography>
+              </CardContent>
+            </Card>
+          </TabPanel>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
-const NavButton = ({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors w-full text-left ${
-      active
-        ? 'bg-[var(--primary)]/10 text-[var(--primary)]'
-        : 'hover:bg-[var(--muted)] text-[var(--foreground)]'
-    }`}
-  >
-    {icon}
-    {label}
-  </button>
+const SecurityItem = ({ icon, iconColor, title, subtitle, actionLabel }: { icon: React.ReactNode; iconColor: string; title: string; subtitle: string; actionLabel: string }) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
+      <Box
+        sx={{
+          p: 1.5,
+          borderRadius: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: alpha(iconColor, 0.1),
+          color: iconColor,
+        }}
+      >
+        {icon}
+      </Box>
+      <Box>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
+          {title}
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+          {subtitle}
+        </Typography>
+      </Box>
+    </Box>
+    <Button
+      variant="outlined"
+      size="small"
+      sx={{
+        borderRadius: 2.5,
+        textTransform: 'none',
+        borderColor: 'rgba(255,255,255,0.1)',
+        color: 'text.secondary',
+        '&:hover': {
+          borderColor: '#fff',
+          color: '#fff',
+          bgcolor: 'rgba(255, 255, 255, 0.05)'
+        }
+      }}
+    >
+      {actionLabel}
+    </Button>
+  </Box>
 );
+

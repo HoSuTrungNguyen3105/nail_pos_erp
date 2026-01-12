@@ -1,4 +1,5 @@
-import { TrendingUp, TrendingDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Box, Typography, alpha, Stack } from '@mui/material';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { DashboardWidget, type WidgetConfig } from './DashboardWidget';
 
 interface MetricWidgetProps {
@@ -10,6 +11,7 @@ interface MetricWidgetProps {
   trend?: 'up' | 'down' | 'neutral';
   icon?: React.ReactNode;
   color?: string;
+  onRemove?: () => void;
 }
 
 export const MetricWidget = ({
@@ -20,54 +22,83 @@ export const MetricWidget = ({
   changeValue,
   trend = 'neutral',
   icon,
-  color = '#3b82f6'
+  color = '#3b82f6',
+  onRemove
 }: MetricWidgetProps) => {
   const getTrendIcon = () => {
     switch (trend) {
-      case 'up': return <ArrowUp size={14} className="text-green-500" />;
-      case 'down': return <ArrowDown size={14} className="text-red-500" />;
+      case 'up': return <ArrowUp size={14} />;
+      case 'down': return <ArrowDown size={14} />;
       default: return null;
     }
   };
 
-  const getTrendColor = () => {
+  const getTrendStyles = () => {
     switch (trend) {
-      case 'up': return 'text-green-500';
-      case 'down': return 'text-red-500';
-      default: return 'text-[var(--muted-foreground)]';
+      case 'up': return { color: '#22c55e', bgcolor: alpha('#22c55e', 0.1) };
+      case 'down': return { color: '#ef4444', bgcolor: alpha('#ef4444', 0.1) };
+      default: return { color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)' };
     }
   };
 
-  return (
-    <DashboardWidget config={config}>
-      <div className="flex items-center justify-between h-full">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            {icon && (
-              <div
-                className="p-2 rounded-lg text-white"
-                style={{ backgroundColor: color }}
-              >
-                {icon}
-              </div>
-            )}
-            <div className="flex-1">
-              <p className="text-2xl font-bold">{value}</p>
-              <p className="text-sm text-[var(--muted-foreground)]">{label}</p>
-            </div>
-          </div>
+  const trendStyle = getTrendStyles();
 
-          {change && (
-            <div className={`flex items-center gap-1 text-sm ${getTrendColor()}`}>
-              {getTrendIcon()}
-              <span className="font-medium">{change}</span>
-              {changeValue && (
-                <span className="text-xs opacity-75">({changeValue})</span>
-              )}
-            </div>
+  return (
+    <DashboardWidget config={config} onRemove={onRemove}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', pt: 1 }}>
+        <Stack direction="row" spacing={2.5} alignItems="center" sx={{ mb: 2.5 }}>
+          {icon && (
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: 2.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: `linear-gradient(135deg, ${color}, ${alpha(color, 0.7)})`,
+                color: '#fff',
+                boxShadow: `0 4px 12px ${alpha(color, 0.3)}`
+              }}
+            >
+              {icon}
+            </Box>
           )}
-        </div>
-      </div>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', lineHeight: 1.1, mb: 0.5 }}>
+              {value}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              {label}
+            </Typography>
+          </Box>
+        </Stack>
+
+        {change && (
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                px: 1,
+                py: 0.25,
+                borderRadius: 1.5,
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                ...trendStyle
+              }}
+            >
+              {getTrendIcon()}
+              {change}
+            </Box>
+            {changeValue && (
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                ({changeValue})
+              </Typography>
+            )}
+          </Stack>
+        )}
+      </Box>
     </DashboardWidget>
   );
 };

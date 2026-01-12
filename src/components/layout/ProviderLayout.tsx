@@ -1,7 +1,27 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import {
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Avatar,
+  Badge,
+  Stack,
+  Button,
+  useMediaQuery,
+  useTheme,
+  alpha,
+  Divider
+} from '@mui/material';
 import {
   LayoutDashboard,
   Package,
@@ -10,17 +30,15 @@ import {
   BarChart3,
   LogOut,
   Settings,
-  Menu,
+  Menu as MenuIcon,
   X,
   Plus,
-  Search,
-  Bell,
-  TrendingUp,
-  AlertTriangle
+  AlertTriangle,
+  ChevronRight
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Button } from '../ui/Button';
 import { RealTimeNotifications } from '../dashboard/RealTimeNotifications';
+
+const DRAWER_WIDTH = 280;
 
 const NAV_ITEMS = [
   { to: '/provider/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -34,7 +52,9 @@ export const ProviderLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const pageTitle =
     NAV_ITEMS.find(i => location.pathname.startsWith(i.to))?.label || 'Overview';
@@ -44,270 +64,407 @@ export const ProviderLayout = () => {
     navigate('/login');
   };
 
-  return (
-    <div className="flex h-screen bg-[var(--background)] overflow-hidden">
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 z-[60] lg:hidden"
-              onClick={() => setOpen(false)}
-            />
-            <motion.div
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[70] w-72 lg:hidden"
-            >
-               <div className="h-full bg-gradient-to-b from-[#2e1065] to-[#4c1d95] shadow-2xl border-r border-white/10 flex flex-col">
-                  {/* Close Button for Mobile */}
-                  <div className="absolute top-4 right-4">
-                    <Button variant="ghost" size="sm" onClick={() => setOpen(false)} className="text-white">
-                      <X size={20} />
-                    </Button>
-                  </div>
-                  
-                  {/* Logo for Mobile */}
-                  <div className="p-6 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-tr from-[#d946ef] to-[#8b5cf6] rounded-lg flex items-center justify-center font-bold text-lg text-white">Z</div>
-                    <div>
-                      <h1 className="text-lg font-bold tracking-wide leading-none text-white">Zota Provider</h1>
-                      <p className="text-[10px] text-white/60 tracking-widest uppercase">Nail Supply Management</p>
-                    </div>
-                  </div>
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
-                  <div className="flex-1 overflow-y-auto pt-2">
-                    <SidebarNav />
-                    
-                    {/* Mobile Quick Actions */}
-                    <div className="px-3 mt-8">
-                      <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
-                        Quick Actions
-                      </h4>
-                      <div className="space-y-2">
-                        <QuickActionButton
-                          icon={<Plus size={16} />}
-                          label="New Product"
-                          onClick={() => { navigate('/provider/products'); setOpen(false); }}
-                        />
-                        <QuickActionButton
-                          icon={<ShoppingCart size={16} />}
-                          label="Process Orders"
-                          onClick={() => { navigate('/provider/orders'); setOpen(false); }}
-                          badge="3"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <SidebarFooter onLogout={handleLogout} />
-               </div>
-            </motion.div>
-          </>
+  const sidebarContent = (
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'linear-gradient(180deg, #1e1b4b 0%, #312e81 100%)',
+        color: '#fff',
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 0% 0%, rgba(217, 70, 239, 0.15) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }
+      }}
+    >
+      {/* Sidebar Header/Logo */}
+      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2, borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #d946ef 0%, #8b5cf6 100%)',
+            boxShadow: '0 8px 16px rgba(139, 92, 246, 0.3)',
+            fontWeight: 800,
+            fontSize: '1.25rem'
+          }}
+        >
+          Z
+        </Box>
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, tracking: '-0.02em' }}>
+            Zota Provider
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.65rem' }}>
+            Nail Supply Management
+          </Typography>
+        </Box>
+        {isMobile && (
+          <IconButton onClick={handleDrawerToggle} sx={{ ml: 'auto', color: 'rgba(255,255,255,0.7)' }}>
+            <X size={20} />
+          </IconButton>
         )}
-      </AnimatePresence>
-      
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-72 bg-gradient-to-b from-[#2e1065] to-[#4c1d95] flex-col border-r border-white/10 shadow-xl z-10 shrink-0">
-         {/* Logo Area */}
-         <div className="p-6 flex items-center gap-3 border-b border-white/5">
-            <div className="w-8 h-8 bg-gradient-to-tr from-[#d946ef] to-[#8b5cf6] rounded-lg flex items-center justify-center font-bold text-lg text-white">Z</div>
-            <div>
-              <h1 className="text-lg font-bold tracking-wide leading-none text-white">Zota Provider</h1>
-              <p className="text-[10px] text-white/60 tracking-widest uppercase">Nail Supply Management</p>
-            </div>
-         </div>
+      </Box>
 
-         <div className="flex-1 py-8 space-y-8 overflow-y-auto">
-            <SidebarNav />
+      {/* Sidebar Navigation */}
+      <Box sx={{ flexGrow: 1, py: 3, overflowY: 'auto' }}>
+        <List sx={{ px: 2, gap: 0.5, display: 'flex', flexDirection: 'column' }}>
+          {NAV_ITEMS.map((item) => {
+            const isActive = location.pathname.startsWith(item.to);
+            return (
+              <ListItem key={item.to} disablePadding>
+                <ListItemButton
+                  component={NavLink}
+                  to={item.to}
+                  onClick={() => isMobile && setMobileOpen(false)}
+                  sx={{
+                    borderRadius: 2,
+                    py: 1.25,
+                    px: 2,
+                    mb: 0.5,
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    bgcolor: isActive ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+                    color: isActive ? '#fff' : 'rgba(255, 255, 255, 0.65)',
+                    '&:hover': {
+                      bgcolor: 'rgba(255, 255, 255, 0.12)',
+                      color: '#fff',
+                      '& .mui-icon': { color: '#d946ef' }
+                    },
+                    '&::before': isActive ? {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: 4,
+                      background: '#d946ef',
+                      borderRadius: '0 4px 4px 0',
+                      boxShadow: '0 0 12px rgba(217, 70, 239, 0.5)'
+                    } : {}
+                  }}
+                >
+                  <ListItemIcon
+                    className="mui-icon"
+                    sx={{
+                      minWidth: 40,
+                      color: isActive ? '#d946ef' : 'inherit',
+                      transition: 'color 0.2s'
+                    }}
+                  >
+                    <item.icon size={20} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontWeight: isActive ? 700 : 500,
+                      fontSize: '0.875rem'
+                    }}
+                  />
+                  {isActive && <ChevronRight size={14} style={{ opacity: 0.5 }} />}
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
 
-            {/* Quick Actions */}
-            <div className="px-3">
-              <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
-                Quick Actions
-              </h4>
-              <div className="space-y-2">
-                <QuickActionButton
-                  icon={<Plus size={16} />}
-                  label="New Product"
-                  onClick={() => navigate('/provider/products')}
-                />
-                <QuickActionButton
-                  icon={<ShoppingCart size={16} />}
-                  label="Process Orders"
-                  onClick={() => navigate('/provider/orders')}
-                  badge="3"
-                />
-                <QuickActionButton
-                  icon={<AlertTriangle size={16} />}
-                  label="Stock Alerts"
-                  onClick={() => navigate('/provider/inventory')}
-                  urgent
-                />
-                <QuickActionButton
-                  icon={<TrendingUp size={16} />}
-                  label="View Reports"
-                  onClick={() => navigate('/provider/reports')}
-                />
-              </div>
-            </div>
+        {/* Quick Actions Section */}
+        <Box sx={{ mt: 4, px: 3 }}>
+          <Typography variant="overline" sx={{ color: 'rgba(255,255,255,0.4)', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '0.1em', mb: 2, display: 'block' }}>
+            Quick Actions
+          </Typography>
+          <Stack spacing={1}>
+            <QuickActionButton
+              icon={<Plus size={18} />}
+              label="New Product"
+              onClick={() => navigate('/provider/products')}
+            />
+            <QuickActionButton
+              icon={<ShoppingCart size={18} />}
+              label="Process Orders"
+              badge="3"
+              onClick={() => navigate('/provider/orders')}
+            />
+            <QuickActionButton
+              icon={<AlertTriangle size={18} />}
+              label="Stock Alerts"
+              urgent
+              onClick={() => navigate('/provider/inventory')}
+            />
+          </Stack>
+        </Box>
 
-            {/* System Status */}
-            <div className="px-3">
-              <h4 className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3 px-3">
-                System Status
-              </h4>
-              <div className="bg-white/5 rounded-lg p-3 mx-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-white/80 text-sm">Server Status</span>
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white/80 text-sm">Last Sync</span>
-                  <span className="text-white/60 text-xs">2 min ago</span>
-                </div>
-              </div>
-            </div>
-         </div>
-         <SidebarFooter onLogout={handleLogout} />
-      </aside>
+        {/* System Status */}
+        <Box sx={{ mt: 4, px: 3 }}>
+          <Typography variant="overline" sx={{ color: 'rgba(255,255,255,0.4)', fontWeight: 800, fontSize: '0.7rem', letterSpacing: '0.1em', mb: 2, display: 'block' }}>
+            System Status
+          </Typography>
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: 3,
+              bgcolor: 'rgba(0, 0, 0, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.05)'
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+              <Typography sx={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>Server Node</Typography>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22c55e', boxShadow: '0 0 8px rgba(34, 197, 94, 0.5)' }} />
+            </Stack>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography sx={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>Last Refreshed</Typography>
+              <Typography sx={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>2m ago</Typography>
+            </Stack>
+          </Box>
+        </Box>
+      </Box>
 
-      {/* Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header - Now inside the right area */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shrink-0 z-20">
-           <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" className="lg:hidden text-gray-500 hover:bg-gray-100" onClick={() => setOpen(true)}>
-                <Menu size={24} />
-              </Button>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 leading-tight">{pageTitle}</h2>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <span>Provider Portal</span>
-                  <span>•</span>
-                  <span className="capitalize">{user?.role}</span>
-                </div>
-              </div>
-           </div>
-           
-           <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 mr-4 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
-                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                 <span className="text-xs font-medium text-gray-600">System Live</span>
-              </div>
-              
+      {/* Sidebar Footer */}
+      <Box sx={{ p: 3, borderTop: '1px solid rgba(255,255,255,0.05)', bgcolor: 'rgba(0,0,0,0.1)' }}>
+        <Button
+          fullWidth
+          variant="text"
+          startIcon={<LogOut size={18} />}
+          onClick={handleLogout}
+          sx={{
+            justifyContent: 'flex-start',
+            color: '#fca5a5',
+            fontWeight: 700,
+            textTransform: 'none',
+            borderRadius: 2,
+            '&:hover': {
+              bgcolor: 'rgba(239, 68, 68, 0.1)',
+              color: '#f87171'
+            }
+          }}
+        >
+          Logout Session
+        </Button>
+      </Box>
+    </Box>
+  );
+
+  return (
+    <Box sx={{ display: 'flex', h: '100vh', bgcolor: '#f8fafc', overflow: 'hidden' }}>
+      {/* Sidebar Navigation */}
+      <Box
+        component="nav"
+        sx={{ width: { lg: DRAWER_WIDTH }, flexShrink: { lg: 0 } }}
+      >
+        {/* Mobile Drawer */}
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: 'block', lg: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, border: 'none' },
+          }}
+        >
+          {sidebarContent}
+        </Drawer>
+
+        {/* Desktop Drawer */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', lg: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, border: 'none' },
+          }}
+          open
+        >
+          {sidebarContent}
+        </Drawer>
+      </Box>
+
+      {/* Main Content Area */}
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: { xs: '100%', lg: `calc(100% - ${DRAWER_WIDTH}px)` } }}>
+        <AppBar
+          position="static"
+          color="inherit"
+          elevation={0}
+          sx={{
+            bgcolor: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(12px)',
+            borderBottom: '1px solid #e2e8f0',
+            zIndex: theme.zIndex.appBar
+          }}
+        >
+          <Toolbar sx={{ px: { xs: 2, lg: 4 }, py: 1 }}>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { lg: 'none' } }}
+            >
+              <MenuIcon size={24} />
+            </IconButton>
+
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: '#1e293b', tracking: '-0.03em', lineHeight: 1.2 }}>
+                {pageTitle}
+              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Provider Portal
+                </Typography>
+                <Box sx={{ w: 4, h: 4, borderRadius: '50%', bgcolor: 'text.disabled' }} />
+                <Typography variant="caption" sx={{ color: '#d946ef', fontWeight: 700, textTransform: 'capitalize' }}>
+                  {user?.role}
+                </Typography>
+              </Stack>
+            </Box>
+
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, px: 2, py: 0.75, bgcolor: '#f1f5f9', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22c55e', animation: 'pulse 2s infinite' }} />
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>Real-time Link Live</Typography>
+              </Box>
+
               <RealTimeNotifications />
-              
-              <div className="hidden sm:block text-right mr-2 border-l border-gray-100 pl-4">
-                 <p className="text-sm font-bold text-gray-900 leading-none mb-1">{user?.name}</p>
-                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Store ID: #8829</p>
-              </div>
-              
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-[#2e1065] hover:bg-[#2e1065]/5">
-                 <Settings size={20} />
-              </Button>
-           </div>
-        </header>
 
-        {/* Main Content Scrollable Area */}
-        <main className="flex-1 overflow-y-auto bg-[#f8fafc] relative">
-          <div className="p-4 lg:p-8">
-            <Outlet />
-          </div>
-        </main>
-      </div>
-    </div>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1, display: { xs: 'none', sm: 'block' } }} />
+
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ display: { xs: 'none', sm: 'flex' } }}>
+                <Box sx={{ textAlign: 'right' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>
+                    {user?.name}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, fontSize: '0.65rem' }}>
+                    STORE #8829
+                  </Typography>
+                </Box>
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    bgcolor: alpha('#d946ef', 0.1),
+                    color: '#d946ef',
+                    fontWeight: 700,
+                    border: '1px solid rgba(217, 70, 239, 0.2)'
+                  }}
+                >
+                  {user?.name?.charAt(0) || 'U'}
+                </Avatar>
+              </Stack>
+
+              <IconButton
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&:hover': { bgcolor: alpha('#1e1b4b', 0.05), color: '#1e1b4b' }
+                }}
+              >
+                <Settings size={20} />
+              </IconButton>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            overflowY: 'auto',
+            bgcolor: '#f8fafc',
+            p: { xs: 2, sm: 4, lg: 6 }
+          }}
+        >
+          <Outlet />
+        </Box>
+      </Box>
+
+      <style>
+        {`
+          @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+          }
+        `}
+      </style>
+    </Box>
   );
 };
 
-const SidebarNav = () => (
-  <nav className="px-3 space-y-1">
-    {NAV_ITEMS.map(item => (
-      <NavItem key={item.to} {...item} />
-    ))}
-  </nav>
-);
-
-const SidebarFooter = ({ onLogout }: { onLogout: () => void }) => (
-  <div className="p-4 border-t border-white/10 bg-black/20">
-    <Button
-       variant="ghost"
-       className="w-full justify-start text-red-300 hover:bg-red-500/20 hover:text-red-100"
-       onClick={onLogout}
-    >
-      <LogOut size={18} className="mr-2" />
-      Logout
-    </Button>
-  </div>
-);
-
-const NavItem = ({ to, icon: Icon, label }: any) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      cn(
-        'group relative flex items-center gap-3 px-4 py-2.5 rounded-md text-sm transition-colors',
-        isActive
-          ? 'bg-white/5 text-white font-semibold'
-          : 'text-white/60 hover:bg-white/5 hover:text-white'
-      )
-    }
-  >
-    {({ isActive }) => (
-      <>
-        {/* ERP-style indicator */}
-        {isActive && (
-          <span className="absolute left-0 top-0 h-full w-[3px] bg-[#d946ef] rounded-r" />
-        )}
-
-        <Icon
-          size={16}
-          className={cn(
-            'shrink-0',
-            isActive ? 'text-[#d946ef]' : 'text-white/60'
-          )}
-        />
-
-        <span className="truncate">{label}</span>
-      </>
-    )}
-  </NavLink>
-);
-
-const QuickActionButton = ({ icon, label, onClick, badge, urgent }: {
+interface QuickActionButtonProps {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
   badge?: string;
   urgent?: boolean;
-}) => (
-  <button
+}
+
+const QuickActionButton = ({ icon, label, onClick, badge, urgent }: QuickActionButtonProps) => (
+  <Button
+    fullWidth
+    variant="text"
     onClick={onClick}
-    className={cn(
-      'w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors',
-      urgent
-        ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30'
-        : 'text-white/70 hover:bg-white/5 hover:text-white'
-    )}
+    sx={{
+      justifyContent: 'flex-start',
+      py: 1.5,
+      px: 2,
+      borderRadius: 2.5,
+      textTransform: 'none',
+      transition: 'all 0.2s',
+      color: urgent ? '#fca5a5' : 'rgba(255,255,255,0.7)',
+      bgcolor: urgent ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.03)',
+      border: `1px solid ${urgent ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)'}`,
+      '&:hover': {
+        bgcolor: urgent ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.08)',
+        color: '#fff',
+        borderColor: urgent ? '#ef4444' : 'rgba(255,255,255,0.2)',
+        transform: 'translateX(4px)'
+      }
+    }}
   >
-    <div className={cn(
-      'p-1.5 rounded-md',
-      urgent ? 'bg-red-500/20' : 'bg-white/10'
-    )}>
+    <Box
+      sx={{
+        mr: 2,
+        display: 'flex',
+        p: 0.75,
+        borderRadius: 2,
+        bgcolor: urgent ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)',
+        color: urgent ? '#ef4444' : 'inherit'
+      }}
+    >
       {icon}
-    </div>
-    <span className="truncate flex-1 text-left">{label}</span>
+    </Box>
+    <Typography sx={{ flexGrow: 1, textAlign: 'left', fontSize: '0.875rem', fontWeight: 600 }}>
+      {label}
+    </Typography>
     {badge && (
-      <span className={cn(
-        'px-2 py-0.5 text-xs rounded-full',
-        urgent ? 'bg-red-500 text-white' : 'bg-[#d946ef] text-white'
-      )}>
-        {badge}
-      </span>
+      <Badge
+        badgeContent={badge}
+        sx={{
+          ml: 1,
+          '& .MuiBadge-badge': {
+            bgcolor: urgent ? '#ef4444' : '#d946ef',
+            color: '#fff',
+            fontWeight: 800,
+            fontSize: '0.65rem'
+          }
+        }}
+      />
     )}
-  </button>
+  </Button>
 );

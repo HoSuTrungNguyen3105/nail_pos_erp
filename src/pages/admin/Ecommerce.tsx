@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SEO from './components/SEO';
-import { ShoppingCart, TrendingUp, Package, DollarSign } from 'lucide-react';
-import { Box, Checkbox, Chip, MenuItem, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { ShoppingCart, TrendingUp, Package, DollarSign, Edit, Trash2, Eye } from 'lucide-react';
+import { Box, Checkbox, Chip, IconButton, MenuItem, TableCell, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { InputTableWrapperCustom, type HeaderColumn } from '../../components/ui/Table';
 
@@ -226,21 +226,15 @@ const Ecommerce: React.FC = () => {
           isSelectedAll={isSelectedAll}
           handleSelectAll={handleSelectAll}
         >
-          {/* {rows.map((row) => {
+          {rows.map((row) => {
             const isChecked = selected.includes(row.id);
 
             return (
               <TableRow key={row.id}>
-                <TableCell>
+                <TableCell sx={{ width: 48 }}>
                   <Checkbox
                     checked={isChecked}
                     onChange={() => toggleRow(row.id)}
-                    sx={{
-                      color: "rgba(217,70,239,0.5)",
-                      "&.Mui-checked": {
-                        color: "#e879f9",
-                      },
-                    }}
                   />
                 </TableCell>
 
@@ -266,22 +260,62 @@ const Ecommerce: React.FC = () => {
                     }}
                   />
                 </TableCell>
+                <TableCell sx={{ width: 120 }}>
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Tooltip title="Xem chi tiết">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          bgcolor: "rgba(59,130,246,0.15)",
+                          color: "#60a5fa",
+                          "&:hover": {
+                            bgcolor: "rgba(59,130,246,0.25)",
+                          },
+                        }}
+                        onClick={() => console.log("view", row.id)}
+                      >
+                        <Eye size={16} />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Chỉnh sửa">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          bgcolor: "rgba(34,197,94,0.15)",
+                          color: "#22c55e",
+                          "&:hover": {
+                            bgcolor: "rgba(34,197,94,0.25)",
+                          },
+                        }}
+                        onClick={() => console.log("edit", row.id)}
+                      >
+                        <Edit size={16} />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Xóa">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          bgcolor: "rgba(239,68,68,0.15)",
+                          color: "#ef4444",
+                          "&:hover": {
+                            bgcolor: "rgba(239,68,68,0.25)",
+                          },
+                        }}
+                        onClick={() => console.log("delete", row.id)}
+                      >
+                        <Trash2 size={16} />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                </TableCell>
               </TableRow>
             );
-          })} */}
-          <TableHead>
-            <TableRow>
-              {hasCheckbox && <TableCell />}
-
-              {headersColumn.map((col) => (
-                <TableCell key={col.key} sx={{ minWidth: col.minWidth }}>
-                  {renderHeaderCell(col, filters, setFilters)}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+          })}
         </InputTableWrapperCustom>
-        {/* Coming Soon Section */}
+
         <Box
           sx={{
             p: 6,

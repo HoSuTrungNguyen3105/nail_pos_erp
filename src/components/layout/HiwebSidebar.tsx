@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  ShoppingCart, 
-  BarChart2, 
-  CheckSquare, 
-  FileText, 
-  Settings, 
-  Table, 
-  MessageSquare, 
-  Lock, 
-  ChevronRight, 
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  BarChart2,
+  CheckSquare,
+  FileText,
+  Settings,
+  Table,
+  MessageSquare,
+  Lock,
+  ChevronRight,
   Menu,
   Bell,
   Search,
@@ -21,7 +21,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../lib/utils";
 import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-
+import "./css/index.css";
 // TypeScript interfaces
 interface MenuItem {
   label: string;
@@ -193,9 +193,9 @@ const HiwebSidebar: React.FC = () => {
   useEffect(() => {
     SidebarData.forEach(section => {
       section.submenuItems?.forEach(item => {
-        const isActive = isMenuItemActive(item) || 
+        const isActive = isMenuItemActive(item) ||
           item.submenuItems?.some(sub => isMenuItemActive(sub));
-        
+
         if (isActive) {
           setOpenMain(item.label);
         }
@@ -212,7 +212,7 @@ const HiwebSidebar: React.FC = () => {
   const toggleMain = (label: string) => {
     setOpenMain(prev => prev === label ? "" : label);
   };
-  
+
   const toggleSub = (label: string) => {
     setOpenSub(prev => prev === label ? "" : label);
   };
@@ -276,54 +276,87 @@ const HiwebSidebar: React.FC = () => {
                         <Box>
                           <IconButton
                             onClick={() => toggleMain(item.label)}
+                            disableRipple
                             className={cn(
-                              "admin-menu-item w-full flex items-center justify-between",
+                              "admin-menu-item w-full justify-between",
                               (isActive || isExpanded) && "active"
                             )}
-                            sx={{ borderRadius: '12px', justifyContent: 'space-between', color: 'inherit' }}
+                            sx={{
+                              borderRadius: "12px",
+                              justifyContent: "flex-start",
+                              color: "inherit",
+                              px: 2,
+                              py: 1.5,
+                            }}
                           >
                             <Box className="flex items-center gap-3">
                               <Box className="flex items-center justify-center">
                                 {item.icon}
                               </Box>
-                              <Typography className="text-sm font-inherit">{item.label}</Typography>
+                              <Typography fontSize={14} fontWeight={500}>
+                                {item.label}
+                              </Typography>
                             </Box>
+
                             <ChevronDown
                               size={14}
                               className={cn(
-                                "transition-transform",
-                                isExpanded && "rotate-180"
+                                "transition-transform duration-300",
+                                isExpanded && "rotate-180 text-fuchsia-400"
                               )}
                             />
                           </IconButton>
+
                           <AnimatePresence>
                             {isExpanded && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                className="overflow-hidden bg-white/5 mx-2 rounded-lg mt-1"
+                                transition={{ duration: 0.25, ease: "circOut" }}
+                                className="overflow-hidden mt-2"
                               >
-                                {item.submenuItems?.map((sub) => (
-                                  <Box
-                                    key={sub.label}
-                                    component={Link}
-                                    to={sub.link || "#"}
-                                    onClick={() => {
-                                      if (!isDesktop) setIsMobileOpen(false);
-                                    }}
-                                    className={cn(
-                                      "block px-9 py-2 text-sm text-slate-400 hover:text-white transition-colors",
-                                      isMenuItemActive(sub) && "text-white font-semibold"
-                                    )}
-                                    sx={{ textDecoration: 'none' }}
-                                  >
-                                    {sub.label}
-                                  </Box>
-                                ))}
+                                <div className="mx-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 p-1">
+                                  {item.submenuItems?.map((sub) => {
+                                    const isSubActive = isMenuItemActive(sub);
+
+                                    return (
+                                      <motion.div
+                                        key={sub.label}
+                                        whileHover={{ x: 6 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                      >
+                                        <Box
+                                          component={Link}
+                                          to={sub.link || "#"}
+                                          className={cn(
+                                            "admin-menu-item text-sm",
+                                            isSubActive && "active"
+                                          )}
+                                          sx={{
+                                            textDecoration: "none",
+                                            mx: 0.5,
+                                          }}
+                                        >
+                                          {/* Dot indicator */}
+                                          <span
+                                            className={cn(
+                                              "w-1.5 h-1.5 rounded-full",
+                                              isSubActive
+                                                ? "bg-fuchsia-400 shadow-[0_0_6px_rgba(232,121,249,0.8)]"
+                                                : "bg-slate-600"
+                                            )}
+                                          />
+                                          <span>{sub.label}</span>
+                                        </Box>
+                                      </motion.div>
+                                    );
+                                  })}
+                                </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
+
                         </Box>
                       ) : (
                         <Box

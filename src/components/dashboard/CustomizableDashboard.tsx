@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Plus, Grid, Layout, Settings } from 'lucide-react';
+import {
+  Box,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText
+} from '@mui/material';
+import { Plus, Layout, Settings, Grid as GridIcon } from 'lucide-react';
 import type { WidgetConfig } from './DashboardWidget';
 
 interface CustomizableDashboardProps {
@@ -23,77 +30,162 @@ export const CustomizableDashboard = ({
   onUpdateWidget,
   children
 }: CustomizableDashboardProps) => {
+  // onRemoveWidget and onUpdateWidget are used by the dashboard state manager (ProviderDashboard)
+  // which controls the widgets passed via the 'children' prop.
   const [isEditMode, setIsEditMode] = useState(false);
-  const [showWidgetSelector, setShowWidgetSelector] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const showWidgetSelector = Boolean(anchorEl);
+
+  const handleAddClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleAddClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ spaceY: 6 }}>
       {/* Dashboard Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">{title}</h1>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6, gap: 2, flexWrap: 'wrap' }}>
+        <Box>
+          <Typography variant="h3" sx={{ fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
+            {title}
+          </Typography>
           {description && (
-            <p className="text-[var(--muted-foreground)] mt-1">{description}</p>
+            <Typography variant="body1" sx={{ color: 'text.secondary', mt: 0.5 }}>
+              {description}
+            </Typography>
           )}
-        </div>
+        </Box>
 
-        <div className="flex items-center gap-3">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Button
-            variant={isEditMode ? 'contained' : 'outline'}
+            variant={isEditMode ? 'contained' : 'outlined'}
             onClick={() => setIsEditMode(!isEditMode)}
+            startIcon={isEditMode ? <Layout size={18} /> : <Settings size={18} />}
+            sx={{
+              borderRadius: 3,
+              textTransform: 'none',
+              fontWeight: 700,
+              px: 3,
+              py: 1,
+              background: isEditMode ? 'linear-gradient(135deg, #d946ef, #7c3aed)' : 'transparent',
+              borderColor: isEditMode ? 'transparent' : 'rgba(255,255,255,0.2)',
+              color: '#fff',
+              '&:hover': {
+                borderColor: '#fff',
+                bgcolor: isEditMode ? undefined : 'rgba(255,255,255,0.05)'
+              }
+            }}
           >
-            {isEditMode ? <Layout size={16} className="mr-2" /> : <Settings size={16} className="mr-2" />}
             {isEditMode ? 'Exit Edit' : 'Customize'}
           </Button>
 
           {isEditMode && (
-            <div className="relative">
+            <Box>
               <Button
-                variant="outline"
-                onClick={() => setShowWidgetSelector(!showWidgetSelector)}
+                variant="outlined"
+                onClick={handleAddClick}
+                startIcon={<Plus size={18} />}
+                sx={{
+                  borderRadius: 3,
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  px: 3,
+                  py: 1,
+                  borderColor: 'rgba(255,255,255,0.2)',
+                  color: '#fff',
+                  '&:hover': {
+                    borderColor: '#fff',
+                    bgcolor: 'rgba(255,255,255,0.05)'
+                  }
+                }}
               >
-                <Plus size={16} className="mr-2" />
                 Add Widget
               </Button>
 
-              {showWidgetSelector && (
-                <Card className="absolute right-0 top-full mt-2 w-64 p-4 z-50">
-                  <h4 className="font-semibold mb-3">Available Widgets</h4>
-                  <div className="space-y-2">
-                    {availableWidgets.map((widget) => (
-                      <button
-                        key={widget.id}
-                        onClick={() => {
-                          onAddWidget(widget);
-                          setShowWidgetSelector(false);
-                        }}
-                        className="w-full text-left p-2 rounded-md hover:bg-[var(--muted)] transition-colors"
-                      >
-                        <div className="font-medium">{widget.title}</div>
-                        <div className="text-sm text-[var(--muted-foreground)] capitalize">
-                          {widget.type} • {widget.size}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </Card>
-              )}
-            </div>
+              <Menu
+                anchorEl={anchorEl}
+                open={showWidgetSelector}
+                onClose={handleAddClose}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 1,
+                      p: 1,
+                      background: 'rgba(15, 23, 42, 0.9)',
+                      backdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: 3,
+                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+                      minWidth: 260
+                    }
+                  }
+                }}
+              >
+                <Typography variant="overline" sx={{ px: 2, pt: 1, pb: 0.5, display: 'block', fontWeight: 700, color: 'text.secondary' }}>
+                  Available Widgets
+                </Typography>
+                {availableWidgets.map((widget) => (
+                  <MenuItem
+                    key={widget.id}
+                    onClick={() => {
+                      onAddWidget(widget);
+                      handleAddClose();
+                    }}
+                    sx={{
+                      borderRadius: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.05)' }
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: '#d946ef' }}>
+                      <GridIcon size={18} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={widget.title}
+                      secondary={`${widget.type} • ${widget.size}`}
+                      primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: '#fff' }}
+                      secondaryTypographyProps={{ variant: 'caption', sx: { textTransform: 'capitalize' } }}
+                    />
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* Dashboard Grid */}
-      <div className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 ${
-        isEditMode ? 'dashboard-edit-mode' : ''
-      }`}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            md: 'repeat(2, 1fr)',
+            xl: 'repeat(3, 1fr)',
+            '2xl': 'repeat(4, 1fr)'
+          },
+          gridAutoFlow: 'dense',
+          gap: 3,
+          position: 'relative',
+          ...(isEditMode && {
+            '&::after': {
+              content: '""',
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.2)',
+              pointerEvents: 'none',
+              zIndex: 1
+            }
+          })
+        }}
+      >
         {children}
-      </div>
-
-      {/* Edit Mode Overlay */}
-      {isEditMode && (
-        <div className="fixed inset-0 bg-black/20 z-40 pointer-events-none" />
-      )}
-    </div>
+      </Box>
+    </Box>
   );
 };

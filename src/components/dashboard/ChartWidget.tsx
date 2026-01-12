@@ -7,17 +7,17 @@ interface ChartWidgetProps {
   data: any[];
   height?: number;
   children: React.ReactNode;
+  onRemove?: () => void;
 }
 
 export const ChartWidget = ({
   config,
-  chartType,
-  data,
   height = 300,
-  children
+  children,
+  onRemove
 }: ChartWidgetProps) => {
   return (
-    <DashboardWidget config={config}>
+    <DashboardWidget config={config} onRemove={onRemove}>
       <ResponsiveContainer width="100%" height={height}>
         {children}
       </ResponsiveContainer>

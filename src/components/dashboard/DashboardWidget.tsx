@@ -1,8 +1,18 @@
 import { useState } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { MoreVertical, Settings, RefreshCw, Expand, Download } from 'lucide-react';
-import { ResponsiveContainer } from 'recharts';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  CircularProgress
+} from '@mui/material';
+import { MoreVertical, Settings, RefreshCw, Expand, Download, Trash2 } from 'lucide-react';
 
 export interface WidgetConfig {
   id: string;
@@ -22,6 +32,7 @@ interface DashboardWidgetProps {
   onExpand?: () => void;
   onExport?: () => void;
   onSettings?: () => void;
+  onRemove?: () => void;
   isLoading?: boolean;
   children: React.ReactNode;
 }
@@ -32,121 +43,194 @@ export const DashboardWidget = ({
   onExpand,
   onExport,
   onSettings,
+  onRemove,
   isLoading = false,
   children
 }: DashboardWidgetProps) => {
-  const [showMenu, setShowMenu] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
-  const getSizeClasses = (size: string) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const getSizeSx = (size: string) => {
     switch (size) {
-      case 'small': return 'col-span-1 row-span-1';
-      case 'medium': return 'col-span-2 row-span-1';
-      case 'large': return 'col-span-2 row-span-2';
-      case 'xlarge': return 'col-span-3 row-span-2';
-      default: return 'col-span-1 row-span-1';
+      case 'small': return { gridColumn: { xs: 'span 1' }, gridRow: 'span 1' };
+      case 'medium': return { gridColumn: { xs: 'span 1', sm: 'span 2' }, gridRow: 'span 1' };
+      case 'large': return { gridColumn: { xs: 'span 1', sm: 'span 2' }, gridRow: 'span 2' };
+      case 'xlarge': return { gridColumn: { xs: 'span 1', sm: 'span 3' }, gridRow: 'span 2' };
+      default: return { gridColumn: 'span 1', gridRow: 'span 1' };
     }
   };
 
   return (
-    <Card className={`relative ${getSizeClasses(config.size)}`}>
+    <Card
+      sx={{
+        ...getSizeSx(config.size),
+        position: 'relative',
+        background: 'rgba(30, 41, 59, 0.4)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 4,
+        overflow: 'visible',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
+          borderColor: 'rgba(255, 255, 255, 0.2)',
+        }
+      }}
+    >
       {/* Widget Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
-        <div>
-          <h3 className="font-semibold text-[var(--foreground)]">{config.title}</h3>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          p: 2.5,
+          pb: 1.5,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+        }}
+      >
+        <Box>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
+            {config.title}
+          </Typography>
           {config.type === 'chart' && (
-            <p className="text-xs text-[var(--muted-foreground)] mt-1">
-              Interactive {config.type} visualization
-            </p>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+              Interactive visualization
+            </Typography>
           )}
-        </div>
+        </Box>
 
-        <div className="flex items-center gap-1">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {config.refreshable && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onRefresh}
-              disabled={isLoading}
-              className="w-8 h-8 p-0"
-            >
-              <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
-            </Button>
+            <Tooltip title="Refresh">
+              <IconButton
+                size="small"
+                onClick={onRefresh}
+                disabled={isLoading}
+                sx={{ color: 'text.secondary', '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } }}
+              >
+                <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
+              </IconButton>
+            </Tooltip>
           )}
 
           {config.expandable && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onExpand}
-              className="w-8 h-8 p-0"
-            >
-              <Expand size={14} />
-            </Button>
+            <Tooltip title="Expand">
+              <IconButton
+                size="small"
+                onClick={onExpand}
+                sx={{ color: 'text.secondary', '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } }}
+              >
+                <Expand size={14} />
+              </IconButton>
+            </Tooltip>
           )}
 
           {config.exportable && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onExport}
-              className="w-8 h-8 p-0"
-            >
-              <Download size={14} />
-            </Button>
+            <Tooltip title="Export">
+              <IconButton
+                size="small"
+                onClick={onExport}
+                sx={{ color: 'text.secondary', '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } }}
+              >
+                <Download size={14} />
+              </IconButton>
+            </Tooltip>
           )}
 
-          {/* Settings Menu */}
-          <div className="relative">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowMenu(!showMenu)}
-              className="w-8 h-8 p-0"
-            >
-              <MoreVertical size={14} />
-            </Button>
+          <IconButton
+            size="small"
+            onClick={handleClick}
+            sx={{ color: 'text.secondary', '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' } }}
+          >
+            <MoreVertical size={14} />
+          </IconButton>
 
-            {showMenu && (
-              <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--card)] border border-[var(--border)] rounded-md shadow-lg z-50">
-                <div className="py-1">
-                  <button
-                    onClick={() => {
-                      onSettings?.();
-                      setShowMenu(false);
-                    }}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-[var(--muted)] flex items-center gap-2"
-                  >
-                    <Settings size={14} />
-                    Widget Settings
-                  </button>
-                  <button
-                    onClick={() => setShowMenu(false)}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-[var(--muted)]"
-                  >
-                    Remove Widget
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            slotProps={{
+              paper: {
+                sx: {
+                  mt: 1,
+                  background: 'rgba(15, 23, 42, 0.9)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 2,
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  minWidth: 160
+                }
+              }
+            }}
+          >
+            <MenuItem
+              onClick={() => { onSettings?.(); handleClose(); }}
+              sx={{ py: 1, '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.05)' } }}
+            >
+              <ListItemIcon sx={{ color: 'text.secondary' }}>
+                <Settings size={16} />
+              </ListItemIcon>
+              <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: '#fff' }} />
+            </MenuItem>
+            <MenuItem
+              onClick={() => { onRemove?.(); handleClose(); }}
+              sx={{ py: 1, '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)', '& svg': { color: '#ef4444' } } }}
+            >
+              <ListItemIcon sx={{ color: 'text.secondary' }}>
+                <Trash2 size={16} />
+              </ListItemIcon>
+              <ListItemText primary="Remove Widget" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: '#fff' }} />
+            </MenuItem>
+          </Menu>
+        </Box>
+      </Box>
 
       {/* Widget Content */}
-      <div className="p-4 h-full">
+      <CardContent
+        sx={{
+          flex: 1,
+          p: 2.5,
+          pt: 1.5,
+          position: 'relative',
+          overflow: 'hidden',
+          '&:last-child': { pb: 2.5 }
+        }}
+      >
         {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <RefreshCw size={24} className="animate-spin text-[var(--muted-foreground)]" />
-          </div>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 150 }}>
+            <CircularProgress size={32} sx={{ color: '#d946ef' }} />
+          </Box>
         ) : (
           children
         )}
-      </div>
+      </CardContent>
 
-      {/* Resize Handle */}
-      <div className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="absolute bottom-1 right-1 w-2 h-2 border-r-2 border-b-2 border-[var(--border)]" />
-      </div>
+      {/* Resize Indicator (Visual Only) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 1,
+          right: 1,
+          width: 8,
+          height: 8,
+          borderRight: '2px solid rgba(255,255,255,0.2)',
+          borderBottom: '2px solid rgba(255,255,255,0.2)',
+          borderRadius: '0 0 2px 0',
+          opacity: 0.5
+        }}
+      />
     </Card>
   );
 };
