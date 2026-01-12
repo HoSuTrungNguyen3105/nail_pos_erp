@@ -19,6 +19,8 @@ import {
   Activity
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "../../lib/utils";
+import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 
 // TypeScript interfaces
 interface MenuItem {
@@ -220,303 +222,197 @@ const HiwebSidebar: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#2e1065] overflow-hidden font-sans text-slate-100">
-      
+    <Box className="admin-wrapper">
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileOpen && !isDesktop && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMobileOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 z-[1200] backdrop-blur-[4px] lg:hidden"
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar */}
-      <motion.aside 
-        className={`
-          fixed inset-y-0 left-0 z-50
-          w-72 bg-[#2e1065] border-r border-white/10
-          flex flex-col
-          shadow-2xl shadow-purple-900/20
-        `}
+      <motion.aside
+        className={cn(
+          "admin-sidebar",
+          !isDesktop && !isMobileOpen && "mobile-closed"
+        )}
         initial={false}
-        animate={{ x: isDesktop ? 0 : (isMobileOpen ? 0 : "-100%") }}
-        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+        animate={{ x: isDesktop || isMobileOpen ? 0 : -288 }}
+        transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
       >
-        {/* Logo Area */}
-        <div className="h-20 flex items-center gap-3 px-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
-          <div>
-            <h1 className="font-bold text-lg tracking-wide text-white">Hiweb Admin</h1>
-            <p className="text-xs text-fuchsia-300/80 font-medium">ERP System v1.0</p>
-          </div>
-        </div>
+        {/* Logo */}
+        <Box className="admin-logo-area">
+          <Box>
+            <Typography variant="h6" className="font-bold text-white mb-0" style={{ fontSize: '1.25rem' }}>
+              Hiweb Admin
+            </Typography>
+            <Typography variant="caption" className="text-fuchsia-300 uppercase tracking-widest font-semibold m-0">
+              ERP System v1.0
+            </Typography>
+          </Box>
+        </Box>
 
-        {/* Scrollable Nav */}
-        <nav ref={scrollRef} className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+        {/* Sidebar content */}
+        <Box component="nav" className="admin-nav custom-scrollbar" ref={scrollRef}>
           {SidebarData.map((section, idx) => (
-            <div key={idx} className="mb-5 last:mb-0">
-              {section.submenuHdr && (
-                <div className="px-3 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                  {section.label}
-                </div>
-              )}
-
-              <ul className="space-y-1">
-                {section.submenuItems?.map((item, itemIdx) => {
-                  const isActive = isMenuItemActive(item) || 
-                    item.submenuItems?.some(sub => isMenuItemActive(sub));
+            <Box key={idx} className="mb-6">
+              <Typography variant="subtitle2" className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2 px-3">
+                {section.label}
+              </Typography>
+              <Box className="space-y-1">
+                {section.submenuItems?.map((item) => {
+                  const isActive = isMenuItemActive(item);
                   const isExpanded = openMain === item.label;
 
                   return (
-                    <li key={itemIdx} className="px-2">
+                    <Box key={item.label}>
                       {item.submenu ? (
-                        // Parent Item with Submenu
-                        <div className="relative">
-                          <motion.button
+                        <Box>
+                          <IconButton
                             onClick={() => toggleMain(item.label)}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`
-                              w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden
-                              ${isActive || isExpanded
-                                ? 'text-white font-medium bg-gradient-to-r from-fuchsia-600/20 to-purple-600/10 shadow-lg shadow-fuchsia-900/10 border border-fuchsia-500/10' 
-                                : 'text-slate-400 hover:text-slate-100 hover:bg-white/5 border border-transparent'
-                              }
-                            `}
-                          >
-                            {/* Glass background effect for active state */}
-                            {(isActive || isExpanded) && (
-                              <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px] -z-10" />
+                            className={cn(
+                              "admin-menu-item w-full flex items-center justify-between",
+                              (isActive || isExpanded) && "active"
                             )}
-                            
-                            <div className="flex items-center gap-3.5 z-10">
-                              <span className={`
-                                transition-all duration-300 transform flex items-center justify-center
-                                ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-300'}
-                              `}>
+                            sx={{ borderRadius: '12px', justifyContent: 'space-between', color: 'inherit' }}
+                          >
+                            <Box className="flex items-center gap-3">
+                              <Box className="flex items-center justify-center">
                                 {item.icon}
-                              </span>
-                              <span className="text-[14px] leading-none pt-0.5">{item.label}</span>
-                            </div>
-                            <ChevronRight 
-                              size={16} 
-                              className={`
-                                transition-transform duration-300 ease-in-out z-10
-                                ${isExpanded ? 'rotate-90 text-fuchsia-400' : 'text-slate-500 group-hover:text-slate-300'}
-                              `}
+                              </Box>
+                              <Typography className="text-sm font-inherit">{item.label}</Typography>
+                            </Box>
+                            <ChevronDown
+                              size={14}
+                              className={cn(
+                                "transition-transform",
+                                isExpanded && "rotate-180"
+                              )}
                             />
-                          </motion.button>
-
-                          {/* Level 1 Submenu */}
+                          </IconButton>
                           <AnimatePresence>
-                            {isExpanded && item.submenuItems && (
+                            {isExpanded && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: "circOut" }}
-                                className="overflow-hidden"
+                                className="overflow-hidden bg-white/5 mx-2 rounded-lg mt-1"
                               >
-                                <ul className="pl-4 mt-2 space-y-1 relative">
-                                  {/* Guide line */}
-                                  <div className="absolute left-7 top-0 bottom-2 w-px bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
-                                  
-                                  {item.submenuItems.map((sub, subIdx) => {
-                                    const isSubActive = isMenuItemActive(sub);
-                                    
-                                    return (
-                                      <li key={subIdx}>
-                                        <Link
-                                          to={sub.link || '#'}
-                                          onClick={() => setIsMobileOpen(false)}
-                                          className="block relative"
-                                        >
-                                           <motion.div
-                                              whileHover={{ x: 4 }}
-                                              className={`
-                                                flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200
-                                                ${isSubActive 
-                                                  ? 'text-teal-300 bg-teal-500/10 font-medium' 
-                                                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-                                                }
-                                              `}
-                                           >
-                                              {/* Dot indicator */}
-                                              <div className={`
-                                                w-1.5 h-1.5 rounded-full transition-all duration-300
-                                                ${isSubActive ? 'bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.5)] scale-110' : 'bg-slate-700 group-hover:bg-slate-500'}
-                                              `} />
-                                              
-                                              <span>{sub.label}</span>
-                                           </motion.div>
-                                        </Link>
-                                      </li>
-                                    );
-                                  })}
-                                </ul>
+                                {item.submenuItems?.map((sub) => (
+                                  <Box
+                                    key={sub.label}
+                                    component={Link}
+                                    to={sub.link || "#"}
+                                    onClick={() => {
+                                      if (!isDesktop) setIsMobileOpen(false);
+                                    }}
+                                    className={cn(
+                                      "block px-9 py-2 text-sm text-slate-400 hover:text-white transition-colors",
+                                      isMenuItemActive(sub) && "text-white font-semibold"
+                                    )}
+                                    sx={{ textDecoration: 'none' }}
+                                  >
+                                    {sub.label}
+                                  </Box>
+                                ))}
                               </motion.div>
                             )}
                           </AnimatePresence>
-                        </div>
+                        </Box>
                       ) : (
-                        // Single Link Item
-                        <Link
-                          to={item.link || '#'}
-                          onClick={() => setIsMobileOpen(false)}
-                          className="block relative"
+                        <Box
+                          component={Link}
+                          to={item.link || "#"}
+                          onClick={() => {
+                            if (!isDesktop) setIsMobileOpen(false);
+                          }}
+                          className={cn(
+                            "admin-menu-item",
+                            isActive && "active"
+                          )}
+                          sx={{ textDecoration: 'none' }}
                         >
-                           <motion.div
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                              className={`
-                                flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group border
-                                ${isActive 
-                                  ? 'bg-gradient-to-r from-fuchsia-600/20 to-purple-600/10 text-white shadow-lg shadow-fuchsia-900/10 border-fuchsia-500/10' 
-                                  : 'text-slate-400 hover:bg-white/5 hover:text-white border-transparent'
-                                }
-                              `}
-                           >
-                              {/* Glass background effect for active state */}
-                              {isActive && (
-                                <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px] -z-10 rounded-xl" />
-                              )}
-                              
-                              <div className="flex items-center gap-3.5 z-10">
-                                <span className={`
-                                  transition-all duration-300 transform flex items-center justify-center
-                                  ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-300'}
-                                `}>
-                                  {item.icon}
-                                </span>
-                                <span className="font-medium text-[14px] leading-none pt-0.5">{item.label}</span>
-                              </div>
-                              
-                              {/* Active visual indicator right */}
-                              {isActive && (
-                                <motion.div 
-                                  layoutId="activeGlow"
-                                  className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 shadow-[0_0_8px_rgba(232,121,249,0.5)]"
-                                /> 
-                              )}
-                           </motion.div>
-                        </Link>
+                          <Box className="flex items-center justify-center">
+                            {item.icon}
+                          </Box>
+                          <Typography className="text-sm font-inherit">{item.label}</Typography>
+                        </Box>
                       )}
-                    </li>
+                    </Box>
                   );
                 })}
-              </ul>
-            </div>
+              </Box>
+            </Box>
           ))}
-        </nav>
+        </Box>
 
-        {/* User / Footer Area */}
-        <div className="p-4 border-t border-white/10 bg-black/20">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-fuchsia-900/20 to-purple-900/20 border border-white/5">
-                <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-white overflow-hidden ring-2 ring-white/10">
-                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="User" />
-                </div>
-                <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white truncate">Admin User</p>
-                    <p className="text-xs text-slate-400 truncate">admin@hiweb.com</p>
-                </div>
-                <Settings size={18} className="text-slate-400 hover:text-white cursor-pointer" />
-            </div>
-        </div>
+        {/* User footer */}
+        <Box className="p-4 border-t border-white/10 bg-black/20">
+          <Box className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+            <Avatar
+              src="https://ui-avatars.com/api/?name=Admin+User&background=random"
+              alt="Admin"
+              sx={{ width: 40, height: 40 }}
+            />
+            <Box className="flex-1 min-w-0">
+              <Typography className="text-sm font-semibold truncate leading-none mb-1">Admin User</Typography>
+              <Typography className="text-[10px] text-slate-400 truncate uppercase tracking-tighter">admin@hiweb.com</Typography>
+            </Box>
+          </Box>
+        </Box>
       </motion.aside>
 
-      {/* Main Content Wrapper (Right Side) */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-[#2e1065] relative lg:ml-72 transition-all duration-300">
-        {/* Background Gradients for Glassmorphism Effect */}
-        <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px] opacity-30 pointer-events-none" />
+      {/* Main Content */}
+      <Box className="admin-content">
+        {/* Header */}
+        <AppBar position="static" className="admin-header" elevation={0} sx={{ bgcolor: 'transparent', backdropFilter: 'none' }}>
+          <Toolbar disableGutters className="w-full h-full flex items-center justify-between px-0">
+            <Box className="flex items-center gap-4">
+              <IconButton
+                className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
+                onClick={toggleMobileSidebar}
+              >
+                <Menu size={24} />
+              </IconButton>
+              <Typography variant="h6" className="text-lg font-bold text-white">Dashboard</Typography>
+            </Box>
 
-        {/* Top Header */}
-        <header className="h-20 flex items-center justify-between px-8 border-b border-white/10 bg-white/5 backdrop-blur-md shrink-0 z-10 transition-all duration-300">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={toggleMobileSidebar}
-              className="lg:hidden p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Menu size={24} />
-            </button>
-            <h2 className="text-xl font-semibold text-white tracking-tight">Dashboard</h2>
-          </div>
-
-          <div className="flex items-center gap-6">
-            {/* Search Bar (Visual) */}
-            <div className="md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 focus-within:bg-white/10 focus-within:border-fuchsia-500/50 transition-all duration-300 w-64">
-              <Search size={18} className="text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Search..." 
-                className="bg-transparent border-none outline-none text-sm text-white placeholder-slate-500 w-full"
+            <Box className="flex items-center gap-4">
+              <IconButton className="p-2 text-slate-400 hover:text-white transition-colors relative">
+                <Bell size={20} />
+                <Box component="span" className="absolute top-2 right-2 w-2 h-2 bg-fuchsia-500 rounded-full border-2 border-[#2e1065]"></Box>
+              </IconButton>
+              <Avatar
+                src="https://ui-avatars.com/api/?name=Admin+User"
+                alt="Profile"
+                sx={{ width: 32, height: 32, border: '1px solid rgba(255,255,255,0.2)' }}
               />
-            </div>
+            </Box>
+          </Toolbar>
+        </AppBar>
 
-            <div className="flex items-center gap-4">
-               <button className="relative p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-full transition-colors">
-                  <Bell size={20} />
-               </button>
-               <div className="flex items-center gap-3">
-                  <div className="text-right hidden sm:block">
-                     <p className="text-xs text-fuchsia-400">Super Admin</p>
-                  </div>
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 p-[1px] ring-2 ring-white/10">
-                    <div className="w-full h-full rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                        <User size={18} className="text-white" />
-                    </div>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </header>
+        {/* Content */}
+        <Box component="main" className="admin-main">
+          <Outlet />
+        </Box>
+      </Box>
 
-        {/* Scrollable Main Content */}
-        <main className="main-content">
-          <div className="max-width">
-            <Outlet />
-          </div>
-        </main>
-      </div>
-
-      {/* Tailwind & Custom Scrollbar Styles */}
       <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(217, 70, 239, 0.2);
-          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(217, 70, 239, 0.4);
-        }
-
-        .main-content {
-          flex: 1;
-          overflow-y: auto;
-          padding: 24px 24px 24px 24px;
-          scroll-behavior: smooth;
-          margin-left: 250px !important;
-        }
-
-        /* thay cho max-w-7xl mx-auto */
-        .max-width {
-          max-width: 100%;
-          width: 100%;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
       `}</style>
-    </div>
+    </Box>
   );
 };
 
