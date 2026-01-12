@@ -38,6 +38,8 @@ const Messages = lazy(() => import('./pages/admin/Messages'));
 const Auth = lazy(() => import('./pages/admin/Auth'));
 const SignIn = lazy(() => import('./pages/admin/SignIn'));
 const SignUp = lazy(() => import('./pages/admin/SignUp'));
+const ERPDashboard = lazy(() => import('./pages/admin/ERPDashboard'));
+const ERPLayout = lazy(() => import('./components/layout/sidebar_admin_erp/ERPLayout'));
 
 function App() {
   return (
@@ -107,6 +109,14 @@ function App() {
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Analytics />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="erp" 
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <ERPDashboard />
             </Suspense>
           } 
         />
@@ -207,6 +217,25 @@ function App() {
           } 
         />
       </Route>
+
+        <Route path="/admin-system" element={<ERPLayout />}>
+          <Route 
+            index 
+            element={
+              <Suspense fallback={<RouteLoadingFallback />}>
+                <ERPDashboard />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="logistics" 
+            element={
+              <Suspense fallback={<RouteLoadingFallback />}>
+                <LogisticsDashboard />
+              </Suspense>
+            } 
+          />
+        </Route>
 
       {/* Fallback */}
       <Route path="/" element={<Navigate to="/login" replace />} />

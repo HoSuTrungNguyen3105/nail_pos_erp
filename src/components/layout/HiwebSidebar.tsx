@@ -15,7 +15,8 @@ import {
   Bell,
   Search,
   ChevronDown,
-  User
+  User,
+  Activity
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -57,6 +58,11 @@ const SidebarData: SidebarSection[] = [
         label: 'Analytics',
         link: '/admin/analytics',
         icon: <BarChart2 size={20} />,
+      },
+      {
+        label: 'ERP Dashboard',
+        link: '/admin/erp',
+        icon: <Activity size={20} />,
       }
     ]
   },
@@ -259,81 +265,100 @@ const HiwebSidebar: React.FC = () => {
                 </div>
               )}
 
-              <ul className="space-y-0.5">
+              <ul className="space-y-1">
                 {section.submenuItems?.map((item, itemIdx) => {
                   const isActive = isMenuItemActive(item) || 
                     item.submenuItems?.some(sub => isMenuItemActive(sub));
                   const isExpanded = openMain === item.label;
 
                   return (
-                    <li key={itemIdx}>
+                    <li key={itemIdx} className="px-2">
                       {item.submenu ? (
                         // Parent Item with Submenu
                         <div className="relative">
-                          <button
+                          <motion.button
                             onClick={() => toggleMain(item.label)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             className={`
-                              w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 group
+                              w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden
                               ${isActive || isExpanded
-                                ? 'bg-gradient-to-r from-fuchsia-500/15 to-purple-500/10 text-white shadow-sm' 
-                                : 'text-slate-400 hover:bg-white/5 hover:text-white hover:shadow-sm'
+                                ? 'text-white font-medium bg-gradient-to-r from-fuchsia-600/20 to-purple-600/10 shadow-lg shadow-fuchsia-900/10 border border-fuchsia-500/10' 
+                                : 'text-slate-400 hover:text-slate-100 hover:bg-white/5 border border-transparent'
                               }
                             `}
                           >
-                            <div className="flex items-center gap-3">
+                            {/* Glass background effect for active state */}
+                            {(isActive || isExpanded) && (
+                              <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px] -z-10" />
+                            )}
+                            
+                            <div className="flex items-center gap-3.5 z-10">
                               <span className={`
-                                transition-all duration-300 transform
-                                ${isActive ? 'text-fuchsia-400 scale-110' : 'text-slate-400 group-hover:text-fuchsia-400 group-hover:scale-105'}
+                                transition-all duration-300 transform flex items-center justify-center
+                                ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-300'}
                               `}>
                                 {item.icon}
                               </span>
-                              <span className="font-medium text-sm">{item.label}</span>
+                              <span className="text-[14px] leading-none pt-0.5">{item.label}</span>
                             </div>
                             <ChevronRight 
                               size={16} 
-                              className={`transition-all duration-300 ${isExpanded ? 'rotate-90 text-fuchsia-400' : 'text-slate-500 group-hover:text-slate-300'}`}
+                              className={`
+                                transition-transform duration-300 ease-in-out z-10
+                                ${isExpanded ? 'rotate-90 text-fuchsia-400' : 'text-slate-500 group-hover:text-slate-300'}
+                              `}
                             />
-                          </button>
+                          </motion.button>
 
                           {/* Level 1 Submenu */}
                           <AnimatePresence>
                             {isExpanded && item.submenuItems && (
-                              <motion.ul
+                              <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25, ease: "easeInOut" }}
-                                className="overflow-hidden pl-3 mt-1 space-y-0.5 border-l-2 border-fuchsia-500/30 ml-6"
+                                transition={{ duration: 0.3, ease: "circOut" }}
+                                className="overflow-hidden"
                               >
-                                {item.submenuItems.map((sub, subIdx) => {
-                                  const isSubActive = isMenuItemActive(sub);
+                                <ul className="pl-4 mt-2 space-y-1 relative">
+                                  {/* Guide line */}
+                                  <div className="absolute left-7 top-0 bottom-2 w-px bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
                                   
-                                  return (
-                                    <li key={subIdx}>
-                                      <Link
-                                        to={sub.link || '#'}
-                                        onClick={() => setIsMobileOpen(false)}
-                                        className={`
-                                          block px-3 py-2 rounded-lg text-sm transition-all duration-300 relative group
-                                          ${isSubActive 
-                                            ? 'text-teal-400 bg-teal-400/15 font-medium shadow-sm' 
-                                            : 'text-slate-400 hover:text-white hover:bg-white/5 hover:pl-4'
-                                          }
-                                        `}
-                                      >
-                                        <span className="relative z-10">{sub.label}</span>
-                                        {isSubActive && (
-                                          <motion.div
-                                            layoutId="activeIndicator"
-                                            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[13px] w-2 h-2 rounded-full bg-teal-400 shadow-lg shadow-teal-400/50"
-                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                          />
-                                        )}
-                                      </Link>
-                                    </li>
-                                  );
-                                })}
-                              </motion.ul>
+                                  {item.submenuItems.map((sub, subIdx) => {
+                                    const isSubActive = isMenuItemActive(sub);
+                                    
+                                    return (
+                                      <li key={subIdx}>
+                                        <Link
+                                          to={sub.link || '#'}
+                                          onClick={() => setIsMobileOpen(false)}
+                                          className="block relative"
+                                        >
+                                           <motion.div
+                                              whileHover={{ x: 4 }}
+                                              className={`
+                                                flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200
+                                                ${isSubActive 
+                                                  ? 'text-teal-300 bg-teal-500/10 font-medium' 
+                                                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                                }
+                                              `}
+                                           >
+                                              {/* Dot indicator */}
+                                              <div className={`
+                                                w-1.5 h-1.5 rounded-full transition-all duration-300
+                                                ${isSubActive ? 'bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.5)] scale-110' : 'bg-slate-700 group-hover:bg-slate-500'}
+                                              `} />
+                                              
+                                              <span>{sub.label}</span>
+                                           </motion.div>
+                                        </Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              </motion.div>
                             )}
                           </AnimatePresence>
                         </div>
@@ -342,28 +367,42 @@ const HiwebSidebar: React.FC = () => {
                         <Link
                           to={item.link || '#'}
                           onClick={() => setIsMobileOpen(false)}
-                          className={`
-                            flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group relative overflow-hidden
-                            ${isActive 
-                              ? 'bg-gradient-to-r from-fuchsia-500/15 to-purple-500/10 text-white shadow-sm' 
-                              : 'text-slate-400 hover:bg-white/5 hover:text-white hover:shadow-sm'
-                            }
-                          `}
+                          className="block relative"
                         >
-                          {isActive && (
-                            <motion.div 
-                              layoutId="activeBorder"
-                              className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-fuchsia-500 to-purple-500 rounded-r-full shadow-lg shadow-fuchsia-500/50"
-                              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                            />
-                          )}
-                          <span className={`
-                            transition-all duration-300 transform
-                            ${isActive ? 'text-fuchsia-400 scale-110' : 'text-slate-400 group-hover:text-fuchsia-400 group-hover:scale-105'}
-                          `}>
-                            {item.icon}
-                          </span>
-                          <span className="font-medium text-sm">{item.label}</span>
+                           <motion.div
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={`
+                                flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group border
+                                ${isActive 
+                                  ? 'bg-gradient-to-r from-fuchsia-600/20 to-purple-600/10 text-white shadow-lg shadow-fuchsia-900/10 border-fuchsia-500/10' 
+                                  : 'text-slate-400 hover:bg-white/5 hover:text-white border-transparent'
+                                }
+                              `}
+                           >
+                              {/* Glass background effect for active state */}
+                              {isActive && (
+                                <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px] -z-10 rounded-xl" />
+                              )}
+                              
+                              <div className="flex items-center gap-3.5 z-10">
+                                <span className={`
+                                  transition-all duration-300 transform flex items-center justify-center
+                                  ${isActive ? 'text-fuchsia-400' : 'text-slate-400 group-hover:text-fuchsia-300'}
+                                `}>
+                                  {item.icon}
+                                </span>
+                                <span className="font-medium text-[14px] leading-none pt-0.5">{item.label}</span>
+                              </div>
+                              
+                              {/* Active visual indicator right */}
+                              {isActive && (
+                                <motion.div 
+                                  layoutId="activeGlow"
+                                  className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 shadow-[0_0_8px_rgba(232,121,249,0.5)]"
+                                /> 
+                              )}
+                           </motion.div>
                         </Link>
                       )}
                     </li>
