@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SEO from './components/SEO';
 import { ShoppingCart, TrendingUp, Package, DollarSign } from 'lucide-react';
-import { Box, Typography } from '@mui/material';
+import { Box, Checkbox, Chip, MenuItem, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { InputTableWrapperCustom, type HeaderColumn } from '../../components/ui/Table';
 
 const stats = [
   { icon: ShoppingCart, label: 'Total Orders', value: '1,234', color: '#d946ef' },
@@ -12,6 +13,151 @@ const stats = [
 ];
 
 const Ecommerce: React.FC = () => {
+  const headersColumn: HeaderColumn[] = [
+    { label: "ID", key: "id", width: 80 },
+
+    {
+      label: "Tên sản phẩm",
+      key: "name",
+      minWidth: 200,
+      filterType: "text",
+    },
+
+    {
+      label: "Danh mục",
+      key: "category",
+      minWidth: 150,
+      filterType: "select",
+      options: [
+        { label: "Tất cả", value: "" },
+        { label: "Laptop", value: "Laptop" },
+        { label: "Mobile", value: "Mobile" },
+        { label: "Accessory", value: "Accessory" },
+      ],
+    },
+
+    {
+      label: "Giá",
+      key: "price",
+      width: 120,
+      filterType: "text",
+    },
+
+    {
+      label: "Trạng thái",
+      key: "status",
+      width: 120,
+      filterType: "select",
+      options: [
+        { label: "Tất cả", value: "" },
+        { label: "Active", value: "Active" },
+        { label: "Inactive", value: "Inactive" },
+      ],
+    },
+
+    { label: "Hành động", key: "action", width: 120 },
+  ];
+
+  const rows = [
+    {
+      id: 1,
+      name: "MacBook Pro M3",
+      category: "Laptop",
+      price: "$2,499",
+      status: "Active",
+    },
+    {
+      id: 2,
+      name: "iPhone 15 Pro",
+      category: "Mobile",
+      price: "$1,299",
+      status: "Inactive",
+    },
+    {
+      id: 3,
+      name: "AirPods Pro",
+      category: "Accessory",
+      price: "$249",
+      status: "Active",
+    },
+  ];
+  const [selected, setSelected] = useState<number[]>([]);
+  const [hasCheckbox, setHasCheckbox] = useState<boolean>(true)
+  const isSelectedAll = selected.length === rows.length;
+  const [filters, setFilters] = useState<Record<string, string>>({});
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelected(e.target.checked ? rows.map((r) => r.id) : []);
+  };
+
+  const toggleRow = (id: number) => {
+    setSelected((prev) =>
+      prev.includes(id)
+        ? prev.filter((i) => i !== id)
+        : [...prev, id]
+    );
+  };
+  const renderHeaderCell = (
+    column: HeaderColumn,
+    filters: Record<string, string>,
+    setFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>
+  ) => {
+    return (
+      <Box display="flex" flexDirection="column" gap={0.5}>
+        <Typography fontSize={11} fontWeight={700} color="#f5f3ff">
+          {column.label}
+        </Typography>
+
+        {column.filterType === "text" && (
+          <TextField
+            size="small"
+            value={filters[column.key] || ""}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                [column.key]: e.target.value,
+              }))
+            }
+            placeholder="Search..."
+            sx={{
+              input: { color: "white", fontSize: 12 },
+              "& .MuiOutlinedInput-root": {
+                height: 30,
+                bgcolor: "rgba(255,255,255,0.05)",
+              },
+            }}
+          />
+        )}
+
+        {column.filterType === "select" && (
+          <TextField
+            select
+            size="small"
+            value={filters[column.key] || ""}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                [column.key]: e.target.value,
+              }))
+            }
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                height: 30,
+                color: "white",
+                bgcolor: "rgba(255,255,255,0.05)",
+              },
+            }}
+          >
+            {column.options?.map((opt) => (
+              <MenuItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+      </Box>
+    );
+  };
   return (
     <>
       <SEO
@@ -36,7 +182,7 @@ const Ecommerce: React.FC = () => {
             const Icon = stat.icon;
 
             return (
-              <Grid size={3} sx={{ md: 6 , lg: 3}} key={idx}>
+              <Grid size={3} sx={{ md: 6, lg: 3 }} key={idx}>
                 <Box
                   sx={{
                     p: 3,
@@ -75,7 +221,66 @@ const Ecommerce: React.FC = () => {
             );
           })}
         </Grid>
+        <InputTableWrapperCustom
+          headersColumn={headersColumn}
+          isSelectedAll={isSelectedAll}
+          handleSelectAll={handleSelectAll}
+        >
+          {/* {rows.map((row) => {
+            const isChecked = selected.includes(row.id);
 
+            return (
+              <TableRow key={row.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={isChecked}
+                    onChange={() => toggleRow(row.id)}
+                    sx={{
+                      color: "rgba(217,70,239,0.5)",
+                      "&.Mui-checked": {
+                        color: "#e879f9",
+                      },
+                    }}
+                  />
+                </TableCell>
+
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.category}</TableCell>
+                <TableCell>{row.price}</TableCell>
+
+                <TableCell>
+                  <Chip
+                    label={row.status}
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      bgcolor:
+                        row.status === "Active"
+                          ? "rgba(34,197,94,0.15)"
+                          : "rgba(239,68,68,0.15)",
+                      color:
+                        row.status === "Active"
+                          ? "#22c55e"
+                          : "#ef4444",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })} */}
+          <TableHead>
+            <TableRow>
+              {hasCheckbox && <TableCell />}
+
+              {headersColumn.map((col) => (
+                <TableCell key={col.key} sx={{ minWidth: col.minWidth }}>
+                  {renderHeaderCell(col, filters, setFilters)}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+        </InputTableWrapperCustom>
         {/* Coming Soon Section */}
         <Box
           sx={{

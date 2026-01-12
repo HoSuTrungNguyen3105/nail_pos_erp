@@ -10,9 +10,11 @@ import type React from "react";
 
 export type HeaderColumn = {
   label: string;
-  required?: boolean;
+  key: string;
   width?: number | string;
   minWidth?: number | string;
+  filterType?: "text" | "select";
+  options?: { label: string; value: string }[];
 };
 export interface InputTableProps {
   headersColumn: HeaderColumn[];
@@ -30,25 +32,85 @@ export const InputTableWrapperCustom = ({
   handleSelectAll,
 }: InputTableProps) => {
   return (
-    <Table>
+    <Table
+      sx={{
+        width: "100%",
+        borderCollapse: "separate",
+        borderSpacing: "0 6px",
+      }}
+    >
       <TableHead>
-        <TableRow>
+        <TableRow
+          sx={{
+            background:
+              "linear-gradient(135deg, rgba(217,70,239,0.15), rgba(147,51,234,0.1))",
+          }}
+        >
           {hasCheckbox && (
-            <TableCell sx={{ width: 51 }}>
-              <Checkbox checked={!!isSelectedAll} onChange={handleSelectAll} />
+            <TableCell
+              sx={{
+                width: 48,
+                padding: "12px 16px",
+                border: "none",
+              }}
+            >
+              <Checkbox
+                checked={!!isSelectedAll}
+                onChange={handleSelectAll}
+                sx={{
+                  color: "rgba(217,70,239,0.5)",
+                  "&.Mui-checked": { color: "#e879f9" },
+                }}
+              />
             </TableCell>
           )}
+
           {headersColumn.map(({ label, width, minWidth }) => (
             <TableCell
               key={label}
-              sx={{ minWidth, width, flexShrink: 0, mt: "-4px" }}
+              sx={{
+                minWidth,
+                width,
+                padding: "12px 16px",
+                verticalAlign: "middle",
+                fontSize: 13,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "#f5f3ff",
+                border: "none",
+                whiteSpace: "nowrap",
+              }}
             >
               {label}
             </TableCell>
           ))}
         </TableRow>
       </TableHead>
-      <TableBody>{children}</TableBody>
+
+      <TableBody
+        sx={{
+          "& .MuiTableRow-root": {
+            background: "rgba(255,255,255,0.03)",
+            backdropFilter: "blur(6px)",
+            transition: "all .2s ease",
+          },
+          "& .MuiTableRow-root:hover": {
+            background:
+              "linear-gradient(135deg, rgba(217,70,239,0.12), rgba(147,51,234,0.08))",
+          },
+          "& .MuiTableCell-root": {
+            padding: "12px 16px",
+            borderBottom: "none",
+            color: "#e5e7eb",
+            fontSize: 14,
+            verticalAlign: "middle",
+            whiteSpace: "nowrap",
+          },
+        }}
+      >
+        {children}
+      </TableBody>
     </Table>
   );
 };
