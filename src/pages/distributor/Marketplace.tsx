@@ -1,28 +1,16 @@
-import { useState, useMemo } from 'react';
-import { Box } from '@mui/material';
+import { useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import MarketplaceFilters from './MarketplaceFilters';
 import PromoBanner from './PromoBanner';
 import ProductCard from './ProductCard';
 import StatCard from './StatCard';
 import ProductTable from './ProductTable';
+import FiltersLayout from './FiltersLayout';
+import { useProducts } from '../../hooks/useProducts';
+import type { MarketplaceProduct } from '../../types/marketplace';
 
-export interface Product {
-  id: number;
-  name: string;
-  sku: string;
-  price: number;
-  originalPrice: number;
-  image: string;
-  rating: number;
-  reviews: number;
-  stock: number;
-  category: string;
-  brand: string;
-  discount: number;
-  isNew: boolean;
-  isBestseller: boolean;
-}
+// Exporting Product type alias for backward compatibility or updating import paths recommended
+export type Product = MarketplaceProduct;
 
 // --- Constants & Types ---
 const CATEGORIES = ['All', 'Gel Systems', 'Polish', 'Tools', 'Equipment', 'Accessories', 'Furniture', 'Consumables'];
@@ -46,22 +34,13 @@ export default function Marketplace() {
   const [showFilters, setShowFilters] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
 
-  const products: Product[] = useMemo(() => [0, 1, 2].map((i) => ({
-    id: i + 1,
-    name: `Nail Gel Polish - ${i + 1}`,
-    sku: `ZPG-${200 + i}`,
-    price: 24.99 + (i * 5),
-    originalPrice: 35.00 + (i * 5),
-    image: `https://images.unsplash.com/photo-1604654894611-6973b376cbde?w=400&q=80`,
-    rating: 4.5 + (Math.random() * 0.5),
-    reviews: Math.floor(Math.random() * 500) + 10,
-    stock: i === 2 ? 0 : Math.floor(Math.random() * 1000) + 50,
-    category: CATEGORIES[(i % (CATEGORIES.length - 1)) + 1],
-    brand: 'Zota Premium',
-    discount: i % 3 === 0 ? 40 : 0,
-    isNew: i % 4 === 0,
-    isBestseller: i % 5 === 0,
-  })), []);
+  const { data: products = [], isLoading, error } = useProducts({
+    category: activeCategory,
+    brand: activeBrand,
+    priceRange: activePriceRange,
+    search: searchQuery,
+    sortBy: sortBy
+  });
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelected(e.target.checked ? products.map((r) => r.id) : []);
@@ -72,6 +51,23 @@ export default function Marketplace() {
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', flexDirection: 'column', gap: 2 }}>
+        <Typography color="error" variant="h6">Failed to load products</Typography>
+        <Typography color="text.secondary">Please try again later.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, mt: 2, mb: 2 }}>
@@ -88,7 +84,7 @@ export default function Marketplace() {
       <PromoBanner />
 
       {/* Filter Section */}
-      <MarketplaceFilters
+      <FiltersLayout
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         showFilters={showFilters}
@@ -124,6 +120,11 @@ export default function Marketplace() {
               <ProductCard product={product} viewMode={viewMode} />
             </Grid>
           ))}
+          {products.length === 0 && (
+            <Box sx={{ width: '100%', p: 4, textAlign: 'center' }}>
+              <Typography color="text.secondary">No products found.</Typography>
+            </Box>
+          )}
         </Grid>
       ) : (
         <ProductTable

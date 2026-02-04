@@ -19,7 +19,7 @@ import {
     Download,
 } from 'lucide-react';
 
-interface MarketplaceFiltersProps {
+interface FiltersProps {
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     showFilters: boolean;
@@ -39,7 +39,7 @@ interface MarketplaceFiltersProps {
     priceRanges: string[];
 }
 
-const MarketplaceFilters = ({
+const FiltersLayout = ({
     searchQuery,
     setSearchQuery,
     showFilters,
@@ -57,7 +57,7 @@ const MarketplaceFilters = ({
     categories,
     brands,
     priceRanges,
-}: MarketplaceFiltersProps) => {
+}: FiltersProps) => {
     return (
         <Card sx={{
             background: 'rgba(255, 255, 255, 0.02)',
@@ -216,4 +216,4 @@ const MarketplaceFilters = ({
     );
 };
 
-export default MarketplaceFilters;
+export default FiltersLayout;
