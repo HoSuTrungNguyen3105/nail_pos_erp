@@ -8,12 +8,16 @@ import {
   Button,
   Stack,
   Chip,
-  Badge,
   Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
-  Search,
-  Bell,
   ChevronLeft,
   ChevronRight,
   Scissors,
@@ -21,6 +25,17 @@ import {
   Clock,
   Plus,
   ArrowUpRight,
+  UserRound,
+  Award,
+  Users,
+  Crown,
+  TrendingUp,
+  TrendingDown,
+  Bell,
+  User,
+  Pencil,
+  Trash2,
+  Eye,
 } from 'lucide-react';
 import type { Stylist, Customer, Booking, FeedItem, Appointment, RevenueMetrics } from '../../types/salon';
 
@@ -137,6 +152,47 @@ const mockAppointments: Appointment[] = [
   { id: '3', date: '2024-04-09', time: '11:00', customerName: 'Jack Riley', service: "Men's Cut & Shave", status: 'scheduled' },
 ];
 
+// New Dashboard Mock Data
+const memberStats = [
+  { id: 1, count: 105, label: 'Total Member', icon: UserRound, color: '#EC4899', bgColor: '#FCE7F3' },
+  { id: 2, count: 25, label: 'New Member', icon: Award, color: '#F59E0B', bgColor: '#FEF3C7' },
+  { id: 3, count: 25, label: 'Regular Member', icon: Users, color: '#10B981', bgColor: '#D1FAE5' },
+  { id: 4, count: 35, label: 'VIP Member', icon: Crown, color: '#F59E0B', bgColor: '#FEF3C7' },
+];
+
+const repurchaseData = [
+  { date: '6-13', value: 12 },
+  { date: '6-14', value: 15 },
+  { date: '6-15', value: 20 },
+  { date: '6-16', value: 14 },
+  { date: '6-17', value: 10 },
+];
+
+const bestSellers = [
+  { id: 1, amount: 560, date: 'March 17, 2020', trend: 'up' },
+  { id: 2, amount: 160, date: 'March 10, 2020', trend: 'down' },
+];
+
+const bookingDates = [
+  { date: 10, month: 'Mar', isActive: false },
+  { date: 11, month: 'Mar', isActive: false },
+  { date: 12, month: 'Mar', isActive: false },
+  { date: 13, month: 'Mar', isActive: false },
+  { date: 14, month: 'Mar', isActive: true },
+  { date: 15, month: 'Mar', isActive: false },
+  { date: 16, month: 'Mar', isActive: false },
+];
+
+const bookingTimeData = [
+  { id: 1, name: 'Isabella Moran', phone: '556-987-479', datetime: 'Mar 14, 2020, 3:30pm', avatar: 'IM' },
+  { id: 2, name: 'Sam Conner', phone: '556-987-479', datetime: 'Mar 14, 2020, 4:30pm', avatar: 'SC' },
+];
+
+const newCustomersData = [
+  { id: 1, name: 'Isabella Moran', phone: '556-987-479', registerDate: 'Mar 14, 2020, 3:30pm', avatar: 'IM' },
+  { id: 2, name: 'Kattey Perry', phone: '556-987-479', registerDate: 'Mar 14, 2020, 3:30pm', avatar: 'KP' },
+];
+
 const SalonDashboard: React.FC = () => {
   const [currentMonth] = useState(new Date(2024, 3, 1)); // April 2024
 
@@ -145,7 +201,7 @@ const SalonDashboard: React.FC = () => {
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     const days = [];
     // Add empty cells for days before month starts
     for (let i = 0; i < firstDay; i++) {
@@ -162,10 +218,10 @@ const SalonDashboard: React.FC = () => {
   const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh', 
-        p: 0, 
+    <Box
+      sx={{
+        minHeight: '100vh',
+        p: 0,
         m: -4,
         background: 'linear-gradient(135deg, #2e1065 0%, #4c1d95 40%, #6b21a8 70%, #be123c 100%)',
         position: 'relative',
@@ -223,7 +279,7 @@ const SalonDashboard: React.FC = () => {
       />
 
       {/* Header */}
-      <Box sx={{ 
+      {/* <Box sx={{ 
         bgcolor: 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)',
         px: 4, 
@@ -272,6 +328,410 @@ const SalonDashboard: React.FC = () => {
             </Stack>
           </Stack>
         </Stack>
+      </Box> */}
+
+      {/* New Dashboard Section */}
+      <Box sx={{ p: 4, bgcolor: '#F5F5F5', position: 'relative', zIndex: 1 }}>
+        {/* Dashboard Header */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h5" fontWeight={600} sx={{ color: '#000' }}>
+            Dashboard
+          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <IconButton sx={{ position: 'relative' }}>
+              <Bell size={20} color="#000" />
+              <Box sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                width: 8,
+                height: 8,
+                bgcolor: '#EF4444',
+                borderRadius: '50%',
+              }} />
+            </IconButton>
+            <Stack direction="row" alignItems="center" spacing={1.5}>
+              <Avatar src="/api/placeholder/40/40" sx={{ width: 40, height: 40 }} />
+              <Box>
+                <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
+                  Samantha
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#666' }}>
+                  Salon Admin
+                </Typography>
+              </Box>
+              <ChevronRight size={16} color="#000" />
+            </Stack>
+          </Stack>
+        </Box>
+
+        <Grid container spacing={3}>
+          {/* Member Stats Cards */}
+          <Grid size={{ xs: 12 }}>
+            <Grid container spacing={2}>
+              {memberStats.map((stat) => (
+                <Grid key={stat.id} size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card sx={{
+                    p: 2.5,
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    bgcolor: '#fff',
+                  }}>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <Box sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: '12px',
+                        bgcolor: stat.bgColor,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        <stat.icon size={28} color={stat.color} />
+                      </Box>
+                      <Box>
+                        <Typography variant="h5" fontWeight={700} sx={{ color: '#000' }}>
+                          {stat.count} Member
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                          {stat.label}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+
+          {/* Repurchase Rate Chart and Best Seller */}
+          <Grid size={{ xs: 12, md: 8 }}>
+            <Card sx={{
+              p: 3,
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              bgcolor: '#fff',
+            }}>
+              <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+                Repurchase rate
+              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#F59E0B' }} />
+                <Typography variant="caption" sx={{ color: '#000' }}>Total Sales</Typography>
+              </Stack>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={repurchaseData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                  <XAxis dataKey="date" stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+                  <YAxis
+                    stroke="#9CA3AF"
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `${value}%`}
+                    domain={[0, 25]}
+                    ticks={[0, 5, 10, 15, 20, 25]}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                    }}
+                    formatter={(value: any) => [`$${value}`, 'Sales']}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#F59E0B"
+                    strokeWidth={2}
+                    dot={{ fill: '#F59E0B', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Card>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Stack spacing={2}>
+              {bestSellers.map((seller) => (
+                <Card key={seller.id} sx={{
+                  p: 2.5,
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  bgcolor: '#fff',
+                }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Box>
+                      <Typography variant="h4" fontWeight={700} sx={{ color: '#000' }}>
+                        ${seller.amount}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#000', mt: 0.5 }}>
+                        Best Seller
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                        {seller.date}
+                      </Typography>
+                    </Box>
+                    <Box sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '50%',
+                      bgcolor: seller.trend === 'up' ? '#D1FAE5' : '#FEE2E2',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      {seller.trend === 'up' ? (
+                        <TrendingUp size={20} color="#10B981" />
+                      ) : (
+                        <TrendingDown size={20} color="#EF4444" />
+                      )}
+                    </Box>
+                  </Stack>
+                </Card>
+              ))}
+            </Stack>
+          </Grid>
+
+          {/* Booking Time Section */}
+          <Grid size={{ xs: 12, md: 5 }}>
+            <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+              Booking time
+            </Typography>
+            <Stack direction="row" spacing={1} mb={3}>
+              {bookingDates.map((booking, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    flex: 1,
+                    textAlign: 'center',
+                    py: 2,
+                    borderRadius: '12px',
+                    bgcolor: booking.isActive ? '#F59E0B' : '#fff',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    sx={{ color: booking.isActive ? '#fff' : '#000' }}
+                  >
+                    {booking.date}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: booking.isActive ? '#fff' : '#9CA3AF' }}
+                  >
+                    {booking.month}
+                  </Typography>
+                  <Box sx={{
+                    width: 4,
+                    height: 4,
+                    borderRadius: '50%',
+                    bgcolor: booking.isActive ? '#fff' : '#F59E0B',
+                    mx: 'auto',
+                    mt: 0.5,
+                  }} />
+                </Box>
+              ))}
+            </Stack>
+
+            {/* Booking Time Table */}
+            <Card sx={{
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              overflow: 'hidden',
+            }}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: '#F9FAFB' }}>
+                      <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '12px', borderBottom: '1px solid #E5E7EB' }}>
+                        USER NAME
+                      </TableCell>
+                      <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '12px', borderBottom: '1px solid #E5E7EB' }}>
+                        DATE & TIME
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {bookingTimeData.map((booking) => (
+                      <TableRow key={booking.id}>
+                        <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#EC4899', fontSize: '12px' }}>
+                              {booking.avatar}
+                            </Avatar>
+                            <Box>
+                              <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
+                                {booking.name}
+                              </Typography>
+                              <Typography variant="caption" sx={{ color: '#F59E0B' }}>
+                                {booking.phone}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        </TableCell>
+                        <TableCell sx={{ color: '#000', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
+                          {booking.datetime}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+          </Grid>
+
+          {/* New Customers Section */}
+          <Grid size={{ xs: 12, md: 7 }}>
+            <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+              New Customers
+            </Typography>
+            <Stack direction="row" spacing={2} mb={3}>
+              <Box sx={{
+                flex: 1,
+                p: 3,
+                borderRadius: '12px',
+                bgcolor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                textAlign: 'center',
+              }}>
+                <User size={32} color="#9CA3AF" style={{ margin: '0 auto' }} />
+                <Typography variant="body2" sx={{ color: '#9CA3AF', mt: 1 }}>
+                  Women
+                </Typography>
+              </Box>
+              <Box sx={{
+                flex: 1,
+                p: 3,
+                borderRadius: '12px',
+                bgcolor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                textAlign: 'center',
+              }}>
+                <User size={32} color="#9CA3AF" style={{ margin: '0 auto' }} />
+                <Typography variant="body2" sx={{ color: '#9CA3AF', mt: 1 }}>
+                  Man
+                </Typography>
+              </Box>
+              <Box sx={{
+                flex: 1,
+                p: 3,
+                borderRadius: '12px',
+                bgcolor: '#F59E0B',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                textAlign: 'center',
+              }}>
+                <Crown size={32} color="#fff" style={{ margin: '0 auto' }} />
+                <Typography variant="body2" sx={{ color: '#fff', mt: 1 }}>
+                  VIP
+                </Typography>
+              </Box>
+              <Box sx={{
+                flex: 1,
+                p: 3,
+                borderRadius: '12px',
+                bgcolor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Users size={20} color="#9CA3AF" />
+                  <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
+                    Add new Customer
+                  </Typography>
+                </Stack>
+                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  Regular Member
+                </Typography>
+                <Button
+                  size="small"
+                  sx={{
+                    mt: 1,
+                    bgcolor: '#F59E0B',
+                    color: '#fff',
+                    fontSize: '11px',
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: '6px',
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: '#D97706' },
+                  }}
+                >
+                  ADD
+                </Button>
+              </Box>
+            </Stack>
+
+            {/* New Customers Table */}
+            <Card sx={{
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              overflow: 'hidden',
+            }}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: '#F9FAFB' }}>
+                      <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '12px', borderBottom: '1px solid #E5E7EB' }}>
+                        USER NAME
+                      </TableCell>
+                      <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '12px', borderBottom: '1px solid #E5E7EB' }}>
+                        REGISTER DATE
+                      </TableCell>
+                      <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '12px', borderBottom: '1px solid #E5E7EB' }}>
+                        DETAILS
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {newCustomersData.map((customer) => (
+                      <TableRow key={customer.id}>
+                        <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#EC4899', fontSize: '12px' }}>
+                              {customer.avatar}
+                            </Avatar>
+                            <Box>
+                              <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
+                                {customer.name}
+                              </Typography>
+                              <Typography variant="caption" sx={{ color: '#F59E0B' }}>
+                                {customer.phone}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        </TableCell>
+                        <TableCell sx={{ color: '#000', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
+                          {customer.registerDate}
+                        </TableCell>
+                        <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
+                          <Stack direction="row" spacing={1}>
+                            <IconButton size="small" sx={{ color: '#9CA3AF' }}>
+                              <Eye size={16} />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#9CA3AF' }}>
+                              <Pencil size={16} />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#9CA3AF' }}>
+                              <Trash2 size={16} />
+                            </IconButton>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
 
       {/* Main Content */}
@@ -279,16 +739,16 @@ const SalonDashboard: React.FC = () => {
         <Grid container spacing={3}>
           {/* Feed Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#333' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
               Feed
             </Typography>
             <Stack spacing={2}>
               {mockFeed.map((item) => (
-                <Card key={item.id} sx={{ 
-                  p: 2.5, 
-                  bgcolor: 'rgba(254, 252, 232, 0.95)', 
+                <Card key={item.id} sx={{
+                  p: 2.5,
+                  bgcolor: 'rgba(254, 252, 232, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  border: '1px solid #FEF3C7', 
+                  border: '1px solid #FEF3C7',
                   borderRadius: '12px',
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}>
@@ -299,7 +759,7 @@ const SalonDashboard: React.FC = () => {
                     <Button
                       size="small"
                       sx={{
-                        bgcolor: 'black',
+                        bgcolor: '#d946ef',
                         color: 'white',
                         fontSize: '11px',
                         fontWeight: 600,
@@ -307,7 +767,7 @@ const SalonDashboard: React.FC = () => {
                         py: 0.5,
                         borderRadius: '6px',
                         textTransform: 'none',
-                        '&:hover': { bgcolor: '#333' },
+                        '&:hover': { bgcolor: '#a21caf' },
                       }}
                     >
                       Cash out
@@ -315,17 +775,17 @@ const SalonDashboard: React.FC = () => {
                   </Stack>
 
                   <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-                    <Avatar sx={{ width: 36, height: 36, bgcolor: '#4ADE80', fontSize: '14px', fontWeight: 600 }}>
+                    <Avatar sx={{ width: 36, height: 36, bgcolor: '#2dd4bf', fontSize: '14px', fontWeight: 600 }}>
                       {item.initials}
                     </Avatar>
                     <Box>
                       <Typography variant="body2" fontWeight={600}>{item.customerName}</Typography>
-                      <Typography variant="caption" color="text.secondary">{item.service}</Typography>
+                      <Typography variant="caption" color="#000">{item.service}</Typography>
                     </Box>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="#000">
                       <strong>Products:</strong> {item.products}
                     </Typography>
                     <Typography variant="h6" fontWeight={700}>
@@ -337,26 +797,26 @@ const SalonDashboard: React.FC = () => {
             </Stack>
 
             {/* Customers Section */}
-            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#333' }}>
+            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#ffffff' }}>
               Customers
             </Typography>
             <Stack spacing={2}>
               {mockCustomers.map((customer) => (
-                <Card key={customer.id} sx={{ 
-                  p: 2.5, 
-                  bgcolor: 'rgba(255, 255, 255, 0.95)', 
+                <Card key={customer.id} sx={{
+                  p: 2.5,
+                  bgcolor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  borderRadius: '12px', 
+                  borderRadius: '12px',
                   border: '1px solid rgba(255, 255, 255, 0.3)',
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}>
                   <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-                    <Avatar sx={{ width: 36, height: 36, bgcolor: '#10B981', fontSize: '14px', fontWeight: 600 }}>
+                    <Avatar sx={{ width: 36, height: 36, bgcolor: '#d946ef', fontSize: '14px', fontWeight: 600 }}>
                       {customer.initials}
                     </Avatar>
                     <Box flex={1}>
                       <Typography variant="body2" fontWeight={600}>{customer.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">{customer.service}</Typography>
+                      <Typography variant="caption" color="#000">{customer.service}</Typography>
                     </Box>
                     {customer.status === 'in-progress' && (
                       <Chip label="Cut in progress" size="small" sx={{ bgcolor: '#FEF3C7', color: '#713F12', fontSize: '11px', height: 20 }} />
@@ -368,14 +828,14 @@ const SalonDashboard: React.FC = () => {
                   <Button
                     fullWidth
                     sx={{
-                      bgcolor: 'black',
+                      bgcolor: '#d946ef',
                       color: 'white',
                       fontSize: '13px',
                       fontWeight: 600,
                       py: 1,
                       borderRadius: '8px',
                       textTransform: 'none',
-                      '&:hover': { bgcolor: '#333' },
+                      '&:hover': { bgcolor: '#a21caf' },
                     }}
                     endIcon={<ArrowUpRight size={16} />}
                   >
@@ -387,14 +847,14 @@ const SalonDashboard: React.FC = () => {
 
             {/* Today's Bookings */}
             <Stack direction="row" justifyContent="space-between" alignItems="center" mt={4} mb={2}>
-              <Typography variant="h6" fontWeight={700} sx={{ color: '#333' }}>
+              <Typography variant="h6" fontWeight={700} sx={{ color: '#ffffff' }}>
                 Today's Bookings
               </Typography>
               <Button
                 size="small"
                 startIcon={<Plus size={16} />}
                 sx={{
-                  bgcolor: 'black',
+                  bgcolor: '#d946ef',
                   color: 'white',
                   fontSize: '12px',
                   fontWeight: 600,
@@ -402,7 +862,7 @@ const SalonDashboard: React.FC = () => {
                   py: 0.75,
                   borderRadius: '8px',
                   textTransform: 'none',
-                  '&:hover': { bgcolor: '#333' },
+                  '&:hover': { bgcolor: '#a21caf' },
                 }}
               >
                 Add new
@@ -410,31 +870,31 @@ const SalonDashboard: React.FC = () => {
             </Stack>
             <Stack spacing={2}>
               {mockBookings.map((booking) => (
-                <Card key={booking.id} sx={{ 
-                  p: 2.5, 
-                  bgcolor: 'rgba(255, 255, 255, 0.95)', 
+                <Card key={booking.id} sx={{
+                  p: 2.5,
+                  bgcolor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  borderRadius: '12px', 
+                  borderRadius: '12px',
                   border: '1px solid rgba(255, 255, 255, 0.3)',
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}>
                   <Stack direction="row" spacing={2}>
                     <Stack alignItems="center" spacing={0.5}>
-                      <Clock size={16} color="#666" />
+                      <Clock size={16} color="#d946ef" />
                       <Typography variant="body2" fontWeight={600}>{booking.time}</Typography>
                       {booking.endTime && (
-                        <Typography variant="caption" color="text.secondary">- {booking.endTime}</Typography>
+                        <Typography variant="caption" color="#000">- {booking.endTime}</Typography>
                       )}
                     </Stack>
                     <Box flex={1}>
                       <Typography variant="body2" fontWeight={600}>{booking.customerName}</Typography>
                       {booking.stylistName && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" color="#000">
                           Stylist: {booking.stylistName}
                         </Typography>
                       )}
                       {booking.service && (
-                        <Typography variant="caption" display="block" color="text.secondary">
+                        <Typography variant="caption" display="block" color="#000">
                           {booking.service}
                         </Typography>
                       )}
@@ -447,14 +907,14 @@ const SalonDashboard: React.FC = () => {
 
           {/* Calendar Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#333' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
               Calendar
             </Typography>
-            <Card sx={{ 
-              p: 3, 
-              bgcolor: 'rgba(255, 255, 255, 0.95)', 
+            <Card sx={{
+              p: 3,
+              bgcolor: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '12px', 
+              borderRadius: '12px',
               border: '1px solid rgba(255, 255, 255, 0.3)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
             }}>
@@ -471,7 +931,7 @@ const SalonDashboard: React.FC = () => {
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, mb: 2 }}>
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
                   <Box key={idx} sx={{ textAlign: 'center', py: 1 }}>
-                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                    <Typography variant="caption" fontWeight={600} color="#000">
                       {day}
                     </Typography>
                   </Box>
@@ -506,7 +966,7 @@ const SalonDashboard: React.FC = () => {
                     <Typography variant="body2" fontWeight={600} sx={{ minWidth: 60 }}>
                       {apt.time}
                     </Typography>
-                    <Typography variant="body2" flex={1} color={apt.status === 'walk-in' ? 'success.main' : 'text.primary'}>
+                    <Typography variant="body2" flex={1} color={apt.status === 'walk-in' ? 'success.main' : '#000'}>
                       {apt.customerName || apt.service}
                     </Typography>
                   </Stack>
@@ -515,23 +975,23 @@ const SalonDashboard: React.FC = () => {
             </Card>
 
             {/* Revenue Section */}
-            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#333' }}>
+            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#ffffff' }}>
               Revenue
             </Typography>
             <Stack direction="row" spacing={2}>
-              <Card sx={{ 
-                flex: 1, 
-                p: 2.5, 
-                bgcolor: 'rgba(255, 255, 255, 0.95)', 
+              <Card sx={{
+                flex: 1,
+                p: 2.5,
+                bgcolor: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
-                borderRadius: '12px', 
+                borderRadius: '12px',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
               }}>
                 <Box sx={{ width: 32, height: 32, bgcolor: '#FEF3C7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
                   <Scissors size={18} color="#713F12" />
                 </Box>
-                <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                <Typography variant="caption" color="#000" display="block" mb={1}>
                   Services
                 </Typography>
                 <Typography variant="h5" fontWeight={700} mb={2}>
@@ -541,14 +1001,14 @@ const SalonDashboard: React.FC = () => {
                   fullWidth
                   size="small"
                   sx={{
-                    bgcolor: 'black',
+                    bgcolor: '#d946ef',
                     color: 'white',
                     fontSize: '11px',
                     fontWeight: 600,
                     py: 0.75,
                     borderRadius: '6px',
                     textTransform: 'none',
-                    '&:hover': { bgcolor: '#333' },
+                    '&:hover': { bgcolor: '#a21caf' },
                   }}
                   endIcon={<ArrowUpRight size={14} />}
                 >
@@ -556,19 +1016,19 @@ const SalonDashboard: React.FC = () => {
                 </Button>
               </Card>
 
-              <Card sx={{ 
-                flex: 1, 
-                p: 2.5, 
-                bgcolor: 'rgba(255, 255, 255, 0.95)', 
+              <Card sx={{
+                flex: 1,
+                p: 2.5,
+                bgcolor: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
-                borderRadius: '12px', 
+                borderRadius: '12px',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
               }}>
                 <Box sx={{ width: 32, height: 32, bgcolor: '#FEF3C7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
                   <ShoppingBag size={18} color="#713F12" />
                 </Box>
-                <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                <Typography variant="caption" color="#000" display="block" mb={1}>
                   Products
                 </Typography>
                 <Typography variant="h5" fontWeight={700} mb={2}>
@@ -578,14 +1038,14 @@ const SalonDashboard: React.FC = () => {
                   fullWidth
                   size="small"
                   sx={{
-                    bgcolor: 'black',
+                    bgcolor: '#d946ef',
                     color: 'white',
                     fontSize: '11px',
                     fontWeight: 600,
                     py: 0.75,
                     borderRadius: '6px',
                     textTransform: 'none',
-                    '&:hover': { bgcolor: '#333' },
+                    '&:hover': { bgcolor: '#a21caf' },
                   }}
                   endIcon={<ArrowUpRight size={14} />}
                 >
@@ -597,19 +1057,19 @@ const SalonDashboard: React.FC = () => {
 
           {/* Stylists Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#333' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
               Stylists
             </Typography>
             <Stack spacing={3}>
               {mockStylists.map((stylist) => (
                 <Box key={stylist.id}>
                   <Stack direction="row" spacing={1.5} alignItems="center" mb={1.5}>
-                    <Avatar sx={{ width: 40, height: 40, bgcolor: 'black', fontSize: '14px', fontWeight: 600 }}>
+                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#2dd4bf', fontSize: '14px', fontWeight: 600, color: '#134e4a' }}>
                       {stylist.initials}
                     </Avatar>
                     <Box>
                       <Typography variant="body2" fontWeight={600}>{stylist.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">{stylist.role}</Typography>
+                      <Typography variant="caption" color="#000">{stylist.role}</Typography>
                     </Box>
                   </Stack>
 
@@ -629,13 +1089,13 @@ const SalonDashboard: React.FC = () => {
                             {task.description}
                           </Typography>
                           {task.duration && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" color="#000">
                               {task.duration}
                             </Typography>
                           )}
                         </Stack>
                         {task.status === 'waiting' && (
-                          <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
+                          <Typography variant="caption" color="#000" display="block" mt={0.5}>
                             • Waiting
                           </Typography>
                         )}
