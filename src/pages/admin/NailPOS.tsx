@@ -127,11 +127,24 @@ export default function NailPOS() {
                 <Box sx={{
                     flex: 1,
                     overflowY: 'auto',
-                    pr: 1,
+                    px: 2,
+                    py: 1.5,
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                    gap: 2,
-                    pb: 2
+                    gridTemplateColumns: {
+                        xs: 'repeat(auto-fill, minmax(150px, 1fr))',
+                        sm: 'repeat(auto-fill, minmax(165px, 1fr))',
+                        md: 'repeat(auto-fill, minmax(175px, 1fr))',
+                        lg: 'repeat(auto-fill, minmax(185px, 1fr))'
+                    },
+                    gap: 2,               // 16px gap - compact
+                    alignContent: 'start',
+                    '&::-webkit-scrollbar': {
+                        width: '6px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: 'rgba(0,0,0,0.15)',
+                        borderRadius: '3px',
+                    }
                 }}>
                     {CHAIRS.map(chair => (
                         <ChairCard

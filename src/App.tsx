@@ -46,6 +46,10 @@ const SalonDashboard = lazy(() => import('./pages/admin/SalonDashboard'));
 const NailSupplyHub = lazy(() => import('./pages/admin/NailSupplyHub'));
 const LuckySpin = lazy(() => import('./pages/admin/LuckySpin'));
 const NailPOS = lazy(() => import('./pages/admin/NailPOS'));
+const NailInventory = lazy(() => import('./pages/admin/NailInventory'));
+const InventoryForm = lazy(() => import('./pages/admin/InventoryForm'));
+const NailBooking = lazy(() => import('./pages/admin/NailBooking'));
+const POSManagementHub = lazy(() => import('./pages/admin/POSManagementHub'));
 
 function App() {
   return (
@@ -266,7 +270,47 @@ function App() {
           path="pos"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
+              <POSManagementHub />
+            </Suspense>
+          }
+        />
+        <Route
+          path="pos-interface"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
               <NailPOS />
+            </Suspense>
+          }
+        />
+        <Route
+          path="inventory"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <NailInventory />
+            </Suspense>
+          }
+        />
+        <Route
+          path="inventory/add"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <InventoryForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="inventory/edit/:id"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <InventoryForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="booking"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <NailBooking />
             </Suspense>
           }
         />
