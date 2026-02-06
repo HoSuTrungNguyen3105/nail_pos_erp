@@ -12,6 +12,8 @@ import {
   Activity,
   Package,
   Store,
+  Sparkles,
+  LayoutGrid,
 } from 'lucide-react';
 import type { MenuItemData } from './AdminMenuItem';
 
@@ -37,6 +39,11 @@ export const SidebarData: SidebarSection[] = [
         label: 'eCommerce',
         link: '/admin/ecommerce',
         icon: <ShoppingCart size={20} />,
+      },
+      {
+        label: 'Nail POS',
+        link: '/admin/pos',
+        icon: <LayoutGrid size={20} />,
       },
       {
         label: 'Analytics',
@@ -86,6 +93,11 @@ export const SidebarData: SidebarSection[] = [
     label: 'INVENTORY',
     submenuHdr: true,
     submenuItems: [
+      {
+        label: 'Nail Supply Hub',
+        link: '/admin/nail-supply-hub',
+        icon: <ShoppingCart size={20} />,
+      },
       {
         label: 'Nail Equipment',
         link: '/admin/nail-equipment',
@@ -138,6 +150,17 @@ export const SidebarData: SidebarSection[] = [
             link: '/admin/auth/signup',
           },
         ],
+      },
+    ],
+  },
+  {
+    label: 'REWARDS',
+    submenuHdr: true,
+    submenuItems: [
+      {
+        label: 'Magical Spin',
+        link: '/admin/lucky-spin',
+        icon: <Sparkles size={20} />,
       },
     ],
   },

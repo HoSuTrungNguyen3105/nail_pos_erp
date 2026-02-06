@@ -43,6 +43,9 @@ const ERPLayout = lazy(() => import('./components/layout/sidebar_admin_erp/ERPLa
 const NailEquipment = lazy(() => import('./pages/admin/NailEquipment'));
 const SupplierManagement = lazy(() => import('./pages/admin/SupplierManagement'));
 const SalonDashboard = lazy(() => import('./pages/admin/SalonDashboard'));
+const NailSupplyHub = lazy(() => import('./pages/admin/NailSupplyHub'));
+const LuckySpin = lazy(() => import('./pages/admin/LuckySpin'));
+const NailPOS = lazy(() => import('./pages/admin/NailPOS'));
 
 function App() {
   return (
@@ -240,6 +243,30 @@ function App() {
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <SalonDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="nail-supply-hub"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <NailSupplyHub />
+            </Suspense>
+          }
+        />
+        <Route
+          path="lucky-spin"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <LuckySpin />
+            </Suspense>
+          }
+        />
+        <Route
+          path="pos"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <NailPOS />
             </Suspense>
           }
         />

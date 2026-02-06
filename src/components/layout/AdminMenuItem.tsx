@@ -42,10 +42,19 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
         <ListItemButton
           onClick={onToggle}
           selected={isActive || isExpanded}
-          sx={{ px: 2, py: 1.5 }}
+          sx={{
+            px: 2,
+            py: 1.5,
+            color: (isActive || isExpanded) ? 'primary.dark' : 'text.primary',
+            '&.Mui-selected': {
+              bgcolor: 'rgba(217, 70, 239, 0.08)',
+              '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.12)' }
+            },
+            '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' }
+          }}
         >
           <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
-            {item.icon}
+            {React.cloneElement(item.icon as React.ReactElement<{ color?: string }>, { color: 'currentColor' })}
           </ListItemIcon>
           <ListItemText
             primary={item.label}
@@ -59,7 +68,7 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
             className="transition-transform duration-300"
             style={{
               transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              color: isExpanded ? '#e879f9' : 'inherit',
+              color: isExpanded ? '#d946ef' : 'currentColor',
             }}
           />
         </ListItemButton>
@@ -72,15 +81,14 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
               mx: 1.5,
               my: 1,
               borderRadius: '12px',
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              bgcolor: 'rgba(217, 70, 239, 0.02)',
+              border: '1px solid rgba(217, 70, 239, 0.1)',
               p: 0.5,
             }}
           >
             {item.submenuItems.map((subItem) => {
               const isSubActive = checkIsActive(subItem);
-              
+
               return (
                 <ListItemButton
                   key={subItem.label}
@@ -94,7 +102,13 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
                     mx: 0.5,
                     borderRadius: '8px',
                     minHeight: 36,
-                    transition: 'background-color 0.2s ease',
+                    color: isSubActive ? 'primary.dark' : 'text.secondary',
+                    transition: 'all 0.2s ease',
+                    '&.Mui-selected': {
+                      bgcolor: 'rgba(217, 70, 239, 0.08)',
+                      '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.12)' }
+                    },
+                    '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' }
                   }}
                 >
                   <Box
@@ -102,9 +116,9 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
                       width: 6,
                       height: 6,
                       borderRadius: '50%',
-                      bgcolor: isSubActive ? 'primary.light' : 'grey.600',
+                      bgcolor: isSubActive ? 'primary.main' : 'grey.400',
                       mr: 2,
-                      boxShadow: isSubActive ? '0 0 6px rgba(232, 121, 249, 0.8)' : 'none',
+                      boxShadow: isSubActive ? '0 0 6px rgba(217, 70, 239, 0.4)' : 'none',
                       transition: 'all 0.2s ease',
                     }}
                   />
@@ -130,16 +144,25 @@ export const AdminMenuItem = memo<AdminMenuItemProps>(({
       to={item.link || '#'}
       selected={isActive}
       onClick={onNavigate}
-      sx={{ px: 2, py: 1.5 }}
+      sx={{
+        px: 2,
+        py: 1.5,
+        color: isActive ? 'primary.dark' : 'text.primary',
+        '&.Mui-selected': {
+          bgcolor: 'rgba(217, 70, 239, 0.08)',
+          '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.12)' }
+        },
+        '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' }
+      }}
     >
       <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
-        {item.icon}
+        {item.icon && React.cloneElement(item.icon as React.ReactElement<{ color?: string }>, { color: 'currentColor' })}
       </ListItemIcon>
       <ListItemText
         primary={item.label}
         primaryTypographyProps={{
           fontSize: 14,
-          fontWeight: 500,
+          fontWeight: isActive ? 600 : 500,
         }}
       />
     </ListItemButton>

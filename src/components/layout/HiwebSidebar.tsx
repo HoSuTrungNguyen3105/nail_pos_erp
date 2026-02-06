@@ -19,6 +19,7 @@ import {
 import { AdminMenuItem } from "./AdminMenuItem";
 import type { MenuItemData } from "./AdminMenuItem";
 import { SidebarData } from "./sidebarData";
+import HorizontalSidebar from "../../pages/admin/components/HorizonalSidebar";
 
 const DRAWER_WIDTH = 288;
 
@@ -28,26 +29,26 @@ const AdminHeader = memo<{ onMenuClick: () => void }>(({ onMenuClick }) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar position="sticky" elevation={0} sx={{ bgcolor: '#ffffff', borderBottom: '1px solid', borderColor: 'grey.200' }}>
       <Toolbar sx={{ minHeight: 80, px: 4 }}>
         <Stack direction="row" alignItems="center" spacing={2} sx={{ flex: 1 }}>
           {!isDesktop && (
             <IconButton
               onClick={onMenuClick}
-              sx={{ color: 'grey.400', '&:hover': { color: 'white' } }}
+              sx={{ color: 'primary.main', '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' } }}
               aria-label="Open navigation menu"
             >
               <Menu size={24} />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
             Dashboard
           </Typography>
         </Stack>
 
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton
-            sx={{ color: 'grey.400', '&:hover': { color: 'white' } }}
+            sx={{ color: 'primary.main', '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' } }}
             aria-label="Notifications"
           >
             <Badge
@@ -55,7 +56,7 @@ const AdminHeader = memo<{ onMenuClick: () => void }>(({ onMenuClick }) => {
               sx={{
                 '& .MuiBadge-badge': {
                   bgcolor: 'primary.main',
-                  border: '2px solid #2e1065',
+                  border: '2px solid #ffffff',
                 },
               }}
             >
@@ -65,7 +66,7 @@ const AdminHeader = memo<{ onMenuClick: () => void }>(({ onMenuClick }) => {
           <Avatar
             src="https://ui-avatars.com/api/?name=Admin+User"
             alt="Admin User"
-            sx={{ width: 32, height: 32, border: '1px solid rgba(255,255,255,0.2)' }}
+            sx={{ width: 32, height: 32, border: '1px solid', borderColor: 'grey.200' }}
           />
         </Stack>
       </Toolbar>
@@ -96,18 +97,30 @@ const SidebarContent = memo<{
           alignItems: 'center',
           px: 3,
           borderBottom: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'rgba(255, 255, 255, 0.02)',
+          borderColor: 'grey.200',
+          bgcolor: '#ffffff',
         }}
       >
         <Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5, fontSize: '1.25rem' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 800,
+              mb: 0.5,
+              fontSize: '1.25rem',
+              background: 'linear-gradient(90deg, #4f46e5 0%, #d946ef 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              color: 'transparent'
+            }}
+          >
             Hiweb Admin
           </Typography>
           <Typography
             variant="overline"
             sx={{
-              color: 'primary.light',
+              color: 'primary.main',
               fontSize: '0.625rem',
               lineHeight: 1,
             }}
@@ -125,12 +138,13 @@ const SidebarContent = memo<{
           overflowY: 'auto',
           py: 3,
           px: 2,
+          bgcolor: '#ffffff',
           '&::-webkit-scrollbar': { width: 4 },
           '&::-webkit-scrollbar-track': { background: 'transparent' },
           '&::-webkit-scrollbar-thumb': {
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'grey.300',
             borderRadius: '10px',
-            '&:hover': { background: 'rgba(255, 255, 255, 0.2)' },
+            '&:hover': { background: 'grey.400' },
           },
         }}
         aria-label="Main navigation"
@@ -140,8 +154,9 @@ const SidebarContent = memo<{
             <Typography
               variant="overline"
               sx={{
-                color: 'grey.400',
-                fontSize: '0.75rem',
+                color: 'primary.main',
+                opacity: 0.7,
+                fontWeight: 700,
                 px: 1.5,
                 mb: 1,
                 display: 'block',
@@ -176,8 +191,8 @@ const SidebarContent = memo<{
         sx={{
           p: 2,
           borderTop: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'rgba(0, 0, 0, 0.2)',
+          borderColor: 'grey.200',
+          bgcolor: '#ffffff',
         }}
       >
         <Box
@@ -187,8 +202,9 @@ const SidebarContent = memo<{
             gap: 1.5,
             p: 1.5,
             borderRadius: '12px',
-            bgcolor: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.05)',
+            bgcolor: 'grey.50',
+            border: '1px solid',
+            borderColor: 'grey.200',
           }}
         >
           <Avatar
@@ -197,13 +213,14 @@ const SidebarContent = memo<{
             sx={{ width: 40, height: 40 }}
           />
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5, color: 'primary.main' }}>
               Admin User
             </Typography>
             <Typography
               variant="caption"
               sx={{
-                color: 'grey.400',
+                color: 'primary.main',
+                opacity: 0.6,
                 fontSize: '0.625rem',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
@@ -288,8 +305,21 @@ const HiwebSidebar: React.FC = () => {
     }
   }, [isDesktop]);
 
+  const isPOSPage = location.pathname === '/admin/pos' || location.pathname.startsWith('/admin/pos/');
+
+  if (isPOSPage) {
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#f8fafc' }}>
+        <HorizontalSidebar />
+        <Box component="main" sx={{ flexGrow: 1, p: 4, pt: 2 }}>
+          <Outlet />
+        </Box>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc' }}>
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileOpen && !isDesktop && (
@@ -365,7 +395,7 @@ const HiwebSidebar: React.FC = () => {
         }}
       >
         <AdminHeader onMenuClick={handleDrawerToggle} />
-        
+
         <Box sx={{ flex: 1, p: 4 }}>
           <Outlet />
         </Box>

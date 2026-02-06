@@ -20,9 +20,9 @@ export const DashboardHeader = ({
                 <Box
                     sx={{
                         display: 'flex',
-                        bgcolor: 'rgba(30, 41, 59, 0.4)',
-                        backdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        bgcolor: 'grey.50',
+                        border: '1px solid',
+                        borderColor: 'grey.200',
                         borderRadius: 3,
                         p: 0.5
                     }}
@@ -38,11 +38,11 @@ export const DashboardHeader = ({
                                 fontWeight: 700,
                                 fontSize: '0.75rem',
                                 color: timeRange === range ? '#fff' : 'text.secondary',
-                                bgcolor: timeRange === range ? '#d946ef' : 'transparent',
-                                boxShadow: timeRange === range ? '0 4px 12px rgba(217, 70, 239, 0.3)' : 'none',
+                                bgcolor: timeRange === range ? 'primary.main' : 'transparent',
+                                boxShadow: timeRange === range ? '0 4px 12px rgba(217, 70, 239, 0.2)' : 'none',
                                 '&:hover': {
-                                    bgcolor: timeRange === range ? '#d946ef' : 'rgba(255,255,255,0.05)',
-                                    color: '#fff'
+                                    bgcolor: timeRange === range ? 'primary.main' : 'rgba(217, 70, 239, 0.04)',
+                                    color: timeRange === range ? '#fff' : 'primary.main'
                                 }
                             }}
                         >
@@ -60,11 +60,12 @@ export const DashboardHeader = ({
                             borderRadius: 3,
                             textTransform: 'none',
                             fontWeight: 700,
-                            borderColor: 'rgba(255,255,255,0.2)',
-                            color: '#fff',
+                            borderColor: 'grey.300',
+                            color: 'text.primary',
                             '&:hover': {
-                                borderColor: '#fff',
-                                bgcolor: 'rgba(255,255,255,0.05)'
+                                borderColor: 'primary.main',
+                                bgcolor: 'rgba(217, 70, 239, 0.04)',
+                                color: 'primary.main'
                             }
                         }}
                     >

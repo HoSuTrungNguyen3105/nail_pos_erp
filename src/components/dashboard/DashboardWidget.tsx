@@ -72,18 +72,18 @@ export const DashboardWidget = ({
       sx={{
         ...getSizeSx(config.size),
         position: 'relative',
-        background: 'rgba(30, 41, 59, 0.4)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: '#ffffff',
+        border: '1px solid rgba(217, 70, 239, 0.15)',
         borderRadius: 4,
         overflow: 'visible',
         display: 'flex',
         flexDirection: 'column',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         '&:hover': {
           transform: 'translateY(-4px)',
-          boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
-          borderColor: 'rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 12px 24px rgba(217, 70, 239, 0.1)',
+          borderColor: 'rgba(217, 70, 239, 0.3)',
         }
       }}
     >
@@ -99,7 +99,7 @@ export const DashboardWidget = ({
         }}
       >
         <Box>
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main', letterSpacing: '-0.01em' }}>
             {config.title}
           </Typography>
           {config.type === 'chart' && (
@@ -165,9 +165,8 @@ export const DashboardWidget = ({
               paper: {
                 sx: {
                   mt: 1,
-                  background: 'rgba(15, 23, 42, 0.9)',
-                  backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: '#ffffff',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   borderRadius: 2,
                   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   minWidth: 160
@@ -182,7 +181,7 @@ export const DashboardWidget = ({
               <ListItemIcon sx={{ color: 'text.secondary' }}>
                 <Settings size={16} />
               </ListItemIcon>
-              <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: '#fff' }} />
+              <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: 'text.primary' }} />
             </MenuItem>
             <MenuItem
               onClick={() => { onRemove?.(); handleClose(); }}
@@ -191,7 +190,7 @@ export const DashboardWidget = ({
               <ListItemIcon sx={{ color: 'text.secondary' }}>
                 <Trash2 size={16} />
               </ListItemIcon>
-              <ListItemText primary="Remove Widget" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: '#fff' }} />
+              <ListItemText primary="Remove Widget" primaryTypographyProps={{ variant: 'body2', fontWeight: 600, color: 'text.primary' }} />
             </MenuItem>
           </Menu>
         </Box>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SEO from './components/SEO';
 import { ShoppingCart, TrendingUp, Package, DollarSign, Edit, Trash2, Eye } from 'lucide-react';
-import { Box, Checkbox, Chip, IconButton, MenuItem, TableCell, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Checkbox, Chip, IconButton, TableCell, TableRow, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { InputTableWrapperCustom, type HeaderColumn } from '../../components/ui/Table';
 
@@ -82,9 +82,7 @@ const Ecommerce: React.FC = () => {
     },
   ];
   const [selected, setSelected] = useState<number[]>([]);
-  const [hasCheckbox, setHasCheckbox] = useState<boolean>(true)
   const isSelectedAll = selected.length === rows.length;
-  const [filters, setFilters] = useState<Record<string, string>>({});
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelected(e.target.checked ? rows.map((r) => r.id) : []);
@@ -97,67 +95,6 @@ const Ecommerce: React.FC = () => {
         : [...prev, id]
     );
   };
-  const renderHeaderCell = (
-    column: HeaderColumn,
-    filters: Record<string, string>,
-    setFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>
-  ) => {
-    return (
-      <Box display="flex" flexDirection="column" gap={0.5}>
-        <Typography fontSize={11} fontWeight={700} color="#f5f3ff">
-          {column.label}
-        </Typography>
-
-        {column.filterType === "text" && (
-          <TextField
-            size="small"
-            value={filters[column.key] || ""}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                [column.key]: e.target.value,
-              }))
-            }
-            placeholder="Search..."
-            sx={{
-              input: { color: "white", fontSize: 12 },
-              "& .MuiOutlinedInput-root": {
-                height: 30,
-                bgcolor: "rgba(255,255,255,0.05)",
-              },
-            }}
-          />
-        )}
-
-        {column.filterType === "select" && (
-          <TextField
-            select
-            size="small"
-            value={filters[column.key] || ""}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                [column.key]: e.target.value,
-              }))
-            }
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                height: 30,
-                color: "white",
-                bgcolor: "rgba(255,255,255,0.05)",
-              },
-            }}
-          >
-            {column.options?.map((opt) => (
-              <MenuItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-      </Box>
-    );
-  };
   return (
     <>
       <SEO
@@ -168,7 +105,7 @@ const Ecommerce: React.FC = () => {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Page Header */}
         <Box>
-          <Typography variant="h4" fontWeight={700} color="white">
+          <Typography variant="h4" fontWeight={700} color="primary.main">
             eCommerce Dashboard
           </Typography>
           <Typography mt={1} color="text.secondary">
@@ -187,12 +124,13 @@ const Ecommerce: React.FC = () => {
                   sx={{
                     p: 3,
                     borderRadius: 3,
-                    background: 'rgba(255,255,255,0.05)',
-                    backdropFilter: 'blur(6px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    background: '#ffffff',
+                    border: '1px solid rgba(217, 70, 239, 0.15)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
                     transition: 'all .2s',
                     '&:hover': {
-                      background: 'rgba(255,255,255,0.1)',
+                      background: 'rgba(217, 70, 239, 0.02)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -211,7 +149,7 @@ const Ecommerce: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         {stat.label}
                       </Typography>
-                      <Typography variant="h5" fontWeight={700} color="white">
+                      <Typography variant="h5" fontWeight={700} color="text.primary">
                         {stat.value}
                       </Typography>
                     </Box>
@@ -322,12 +260,12 @@ const Ecommerce: React.FC = () => {
             borderRadius: 3,
             textAlign: 'center',
             background:
-              'linear-gradient(135deg, rgba(217,70,239,0.1), rgba(147,51,234,0.1))',
-            border: '1px solid rgba(255,255,255,0.1)',
+              'rgba(217, 70, 239, 0.03)',
+            border: '1px solid rgba(217, 70, 239, 0.1)',
           }}
         >
           <ShoppingCart size={64} color="#d946ef" />
-          <Typography variant="h5" fontWeight={700} color="white" mt={2}>
+          <Typography variant="h5" fontWeight={700} color="primary.main" mt={2}>
             eCommerce Module
           </Typography>
           <Typography

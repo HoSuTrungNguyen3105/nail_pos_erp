@@ -1,12 +1,13 @@
 @import './styles/design-system.css';
 @import './styles/zota-theme.css';
 @import './styles/components.css';
-/* @import './index.css'; */
+@import './styles/horizontal-sidebar.css';
 
 @import "tailwindcss";
 
 /* Custom Global Reset - wrapped in @layer base for Tailwind v4 */
 @layer base {
+
   *,
   *::before,
   *::after {

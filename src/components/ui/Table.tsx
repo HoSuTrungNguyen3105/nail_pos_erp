@@ -58,8 +58,8 @@ export const InputTableWrapperCustom = ({
                 checked={!!isSelectedAll}
                 onChange={handleSelectAll}
                 sx={{
-                  color: "rgba(217,70,239,0.5)",
-                  "&.Mui-checked": { color: "#e879f9" },
+                  color: "primary.main",
+                  "&.Mui-checked": { color: "primary.main" },
                 }}
               />
             </TableCell>
@@ -77,7 +77,7 @@ export const InputTableWrapperCustom = ({
                 fontWeight: 700,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
-                color: "#f5f3ff",
+                color: "primary.main",
                 border: "none",
                 whiteSpace: "nowrap",
               }}
@@ -91,8 +91,8 @@ export const InputTableWrapperCustom = ({
       <TableBody
         sx={{
           "& .MuiTableRow-root": {
-            background: "rgba(255,255,255,0.03)",
-            backdropFilter: "blur(6px)",
+            background: "#ffffff",
+            borderBottom: "1px solid rgba(0,0,0,0.05)",
             transition: "all .2s ease",
           },
           "& .MuiTableRow-root:hover": {
@@ -101,8 +101,8 @@ export const InputTableWrapperCustom = ({
           },
           "& .MuiTableCell-root": {
             padding: "12px 16px",
-            borderBottom: "none",
-            color: "#e5e7eb",
+            borderBottom: "1px solid rgba(0,0,0,0.05)",
+            color: "text.primary",
             fontSize: 14,
             verticalAlign: "middle",
             whiteSpace: "nowrap",

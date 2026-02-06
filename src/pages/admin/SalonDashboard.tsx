@@ -154,10 +154,10 @@ const mockAppointments: Appointment[] = [
 
 // New Dashboard Mock Data
 const memberStats = [
-  { id: 1, count: 105, label: 'Total Member', icon: UserRound, color: '#EC4899', bgColor: '#FCE7F3' },
-  { id: 2, count: 25, label: 'New Member', icon: Award, color: '#F59E0B', bgColor: '#FEF3C7' },
-  { id: 3, count: 25, label: 'Regular Member', icon: Users, color: '#10B981', bgColor: '#D1FAE5' },
-  { id: 4, count: 35, label: 'VIP Member', icon: Crown, color: '#F59E0B', bgColor: '#FEF3C7' },
+  { id: 1, count: 105, label: 'Total Member', icon: UserRound, color: '#d946ef', bgColor: 'rgba(217, 70, 239, 0.1)' },
+  { id: 2, count: 25, label: 'New Member', icon: Award, color: '#d946ef', bgColor: 'rgba(217, 70, 239, 0.1)' },
+  { id: 3, count: 25, label: 'Regular Member', icon: Users, color: '#d946ef', bgColor: 'rgba(217, 70, 239, 0.1)' },
+  { id: 4, count: 35, label: 'VIP Member', icon: Crown, color: '#d946ef', bgColor: 'rgba(217, 70, 239, 0.1)' },
 ];
 
 const repurchaseData = [
@@ -223,7 +223,7 @@ const SalonDashboard: React.FC = () => {
         minHeight: '100vh',
         p: 0,
         m: -4,
-        background: 'linear-gradient(135deg, #2e1065 0%, #4c1d95 40%, #6b21a8 70%, #be123c 100%)',
+        background: '#ffffff',
         position: 'relative',
         overflow: 'hidden',
         '&::before': {
@@ -234,7 +234,7 @@ const SalonDashboard: React.FC = () => {
           width: '600px',
           height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(217, 70, 239, 0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(217, 70, 239, 0.05) 0%, transparent 70%)',
           pointerEvents: 'none',
         },
         '&::after': {
@@ -245,7 +245,7 @@ const SalonDashboard: React.FC = () => {
           width: '500px',
           height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(45, 212, 191, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(45, 212, 191, 0.05) 0%, transparent 70%)',
           pointerEvents: 'none',
         },
       }}
@@ -331,15 +331,15 @@ const SalonDashboard: React.FC = () => {
       </Box> */}
 
       {/* New Dashboard Section */}
-      <Box sx={{ p: 4, bgcolor: '#F5F5F5', position: 'relative', zIndex: 1 }}>
+      <Box sx={{ p: 4, bgcolor: '#ffffff', position: 'relative', zIndex: 1 }}>
         {/* Dashboard Header */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <Typography variant="h5" fontWeight={600} sx={{ color: '#000' }}>
+          <Typography variant="h5" fontWeight={600} sx={{ color: 'primary.main' }}>
             Dashboard
           </Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
             <IconButton sx={{ position: 'relative' }}>
-              <Bell size={20} color="#000" />
+              <Bell size={20} color="primary.main" />
               <Box sx={{
                 position: 'absolute',
                 top: 8,
@@ -353,14 +353,14 @@ const SalonDashboard: React.FC = () => {
             <Stack direction="row" alignItems="center" spacing={1.5}>
               <Avatar src="/api/placeholder/40/40" sx={{ width: 40, height: 40 }} />
               <Box>
-                <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
+                <Typography variant="body2" fontWeight={600} sx={{ color: 'text.primary' }}>
                   Samantha
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#666' }}>
+                <Typography variant="caption" sx={{ color: 'primary.main', opacity: 0.8 }}>
                   Salon Admin
                 </Typography>
               </Box>
-              <ChevronRight size={16} color="#000" />
+              <ChevronRight size={16} color="primary.main" />
             </Stack>
           </Stack>
         </Box>
@@ -376,6 +376,7 @@ const SalonDashboard: React.FC = () => {
                     borderRadius: '12px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     bgcolor: '#fff',
+                    border: '1px solid rgba(217, 70, 239, 0.2)',
                   }}>
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Box sx={{
@@ -390,10 +391,10 @@ const SalonDashboard: React.FC = () => {
                         <stat.icon size={28} color={stat.color} />
                       </Box>
                       <Box>
-                        <Typography variant="h5" fontWeight={700} sx={{ color: '#000' }}>
+                        <Typography variant="h5" fontWeight={700} sx={{ color: 'primary.main' }}>
                           {stat.count} Member
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                        <Typography variant="caption" sx={{ color: 'primary.main', opacity: 0.7 }}>
                           {stat.label}
                         </Typography>
                       </Box>
@@ -411,20 +412,21 @@ const SalonDashboard: React.FC = () => {
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
               bgcolor: '#fff',
+              border: '1px solid rgba(217, 70, 239, 0.2)',
             }}>
-              <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+              <Typography variant="h6" fontWeight={600} sx={{ color: 'primary.main', mb: 2 }}>
                 Repurchase rate
               </Typography>
               <Stack direction="row" spacing={1} alignItems="center" mb={2}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#F59E0B' }} />
-                <Typography variant="caption" sx={{ color: '#000' }}>Total Sales</Typography>
+                <Typography variant="caption" sx={{ color: 'primary.main' }}>Total Sales</Typography>
               </Stack>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={repurchaseData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                   <XAxis dataKey="date" stroke="#9CA3AF" style={{ fontSize: '12px' }} />
                   <YAxis
-                    stroke="#9CA3AF"
+                    stroke="primary.main"
                     style={{ fontSize: '12px' }}
                     tickFormatter={(value) => `${value}%`}
                     domain={[0, 25]}
@@ -460,16 +462,17 @@ const SalonDashboard: React.FC = () => {
                   borderRadius: '12px',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                   bgcolor: '#fff',
+                  border: '1px solid rgba(217, 70, 239, 0.2)',
                 }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Box>
-                      <Typography variant="h4" fontWeight={700} sx={{ color: '#000' }}>
+                      <Typography variant="h4" fontWeight={700} sx={{ color: 'primary.main' }}>
                         ${seller.amount}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#000', mt: 0.5 }}>
+                      <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 600, mt: 0.5 }}>
                         Best Seller
                       </Typography>
-                      <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                      <Typography variant="caption" sx={{ color: 'primary.main', opacity: 0.6 }}>
                         {seller.date}
                       </Typography>
                     </Box>
@@ -496,7 +499,7 @@ const SalonDashboard: React.FC = () => {
 
           {/* Booking Time Section */}
           <Grid size={{ xs: 12, md: 5 }}>
-            <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+            <Typography variant="h6" fontWeight={600} sx={{ color: 'primary.main', mb: 2 }}>
               Booking time
             </Typography>
             <Stack direction="row" spacing={1} mb={3}>
@@ -508,7 +511,8 @@ const SalonDashboard: React.FC = () => {
                     textAlign: 'center',
                     py: 2,
                     borderRadius: '12px',
-                    bgcolor: booking.isActive ? '#F59E0B' : '#fff',
+                    bgcolor: booking.isActive ? 'primary.main' : '#fff',
+                    border: booking.isActive ? '1px solid primary.main' : '1px solid rgba(217, 70, 239, 0.2)',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     cursor: 'pointer',
                   }}
@@ -516,13 +520,13 @@ const SalonDashboard: React.FC = () => {
                   <Typography
                     variant="h5"
                     fontWeight={700}
-                    sx={{ color: booking.isActive ? '#fff' : '#000' }}
+                    sx={{ color: booking.isActive ? '#fff' : 'primary.main' }}
                   >
                     {booking.date}
                   </Typography>
                   <Typography
                     variant="caption"
-                    sx={{ color: booking.isActive ? '#fff' : '#9CA3AF' }}
+                    sx={{ color: booking.isActive ? '#fff' : 'primary.main', opacity: booking.isActive ? 1 : 0.7 }}
                   >
                     {booking.month}
                   </Typography>
@@ -530,7 +534,7 @@ const SalonDashboard: React.FC = () => {
                     width: 4,
                     height: 4,
                     borderRadius: '50%',
-                    bgcolor: booking.isActive ? '#fff' : '#F59E0B',
+                    bgcolor: booking.isActive ? '#fff' : 'primary.main',
                     mx: 'auto',
                     mt: 0.5,
                   }} />
@@ -542,6 +546,7 @@ const SalonDashboard: React.FC = () => {
             <Card sx={{
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              border: '1px solid rgba(217, 70, 239, 0.2)',
               overflow: 'hidden',
             }}>
               <TableContainer>
@@ -561,20 +566,20 @@ const SalonDashboard: React.FC = () => {
                       <TableRow key={booking.id}>
                         <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
                           <Stack direction="row" spacing={1.5} alignItems="center">
-                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#EC4899', fontSize: '12px' }}>
+                            <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.main', fontSize: '12px' }}>
                               {booking.avatar}
                             </Avatar>
                             <Box>
                               <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
                                 {booking.name}
                               </Typography>
-                              <Typography variant="caption" sx={{ color: '#F59E0B' }}>
+                              <Typography variant="caption" sx={{ color: 'primary.main', opacity: 0.7 }}>
                                 {booking.phone}
                               </Typography>
                             </Box>
                           </Stack>
                         </TableCell>
-                        <TableCell sx={{ color: '#000', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
+                        <TableCell sx={{ color: 'primary.main', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
                           {booking.datetime}
                         </TableCell>
                       </TableRow>
@@ -587,7 +592,7 @@ const SalonDashboard: React.FC = () => {
 
           {/* New Customers Section */}
           <Grid size={{ xs: 12, md: 7 }}>
-            <Typography variant="h6" fontWeight={600} sx={{ color: '#000', mb: 2 }}>
+            <Typography variant="h6" fontWeight={600} sx={{ color: 'primary.main', mb: 2 }}>
               New Customers
             </Typography>
             <Stack direction="row" spacing={2} mb={3}>
@@ -596,6 +601,7 @@ const SalonDashboard: React.FC = () => {
                 p: 3,
                 borderRadius: '12px',
                 bgcolor: '#fff',
+                border: '1px solid rgba(217, 70, 239, 0.2)',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 textAlign: 'center',
               }}>
@@ -609,6 +615,7 @@ const SalonDashboard: React.FC = () => {
                 p: 3,
                 borderRadius: '12px',
                 bgcolor: '#fff',
+                border: '1px solid rgba(217, 70, 239, 0.2)',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 textAlign: 'center',
               }}>
@@ -621,8 +628,9 @@ const SalonDashboard: React.FC = () => {
                 flex: 1,
                 p: 3,
                 borderRadius: '12px',
-                bgcolor: '#F59E0B',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                bgcolor: 'primary.main',
+                border: '1px solid primary.main',
+                boxShadow: '0 2px 8px rgba(217, 70, 239, 0.3)',
                 textAlign: 'center',
               }}>
                 <Crown size={32} color="#fff" style={{ margin: '0 auto' }} />
@@ -673,6 +681,7 @@ const SalonDashboard: React.FC = () => {
             <Card sx={{
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              border: '1px solid rgba(217, 70, 239, 0.2)',
               overflow: 'hidden',
             }}>
               <TableContainer>
@@ -695,20 +704,20 @@ const SalonDashboard: React.FC = () => {
                       <TableRow key={customer.id}>
                         <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
                           <Stack direction="row" spacing={1.5} alignItems="center">
-                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#EC4899', fontSize: '12px' }}>
+                            <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.main', fontSize: '12px' }}>
                               {customer.avatar}
                             </Avatar>
                             <Box>
                               <Typography variant="body2" fontWeight={600} sx={{ color: '#000' }}>
                                 {customer.name}
                               </Typography>
-                              <Typography variant="caption" sx={{ color: '#F59E0B' }}>
+                              <Typography variant="caption" sx={{ color: 'primary.main', opacity: 0.7 }}>
                                 {customer.phone}
                               </Typography>
                             </Box>
                           </Stack>
                         </TableCell>
-                        <TableCell sx={{ color: '#000', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
+                        <TableCell sx={{ color: 'primary.main', fontSize: '14px', borderBottom: '1px solid #F3F4F6' }}>
                           {customer.registerDate}
                         </TableCell>
                         <TableCell sx={{ borderBottom: '1px solid #F3F4F6' }}>
@@ -739,27 +748,27 @@ const SalonDashboard: React.FC = () => {
         <Grid container spacing={3}>
           {/* Feed Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: 'primary.main' }}>
               Feed
             </Typography>
             <Stack spacing={2}>
               {mockFeed.map((item) => (
                 <Card key={item.id} sx={{
                   p: 2.5,
-                  bgcolor: 'rgba(254, 252, 232, 0.95)',
+                  bgcolor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  border: '1px solid #FEF3C7',
+                  border: '1px solid rgba(217, 70, 239, 0.2)',
                   borderRadius: '12px',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
                 }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                    <Typography variant="body2" fontWeight={600} color="#713F12">
+                    <Typography variant="body2" fontWeight={600} color="primary.main">
                       Ready for cash out
                     </Typography>
                     <Button
                       size="small"
                       sx={{
-                        bgcolor: '#d946ef',
+                        bgcolor: 'primary.main',
                         color: 'white',
                         fontSize: '11px',
                         fontWeight: 600,
@@ -779,13 +788,13 @@ const SalonDashboard: React.FC = () => {
                       {item.initials}
                     </Avatar>
                     <Box>
-                      <Typography variant="body2" fontWeight={600}>{item.customerName}</Typography>
-                      <Typography variant="caption" color="#000">{item.service}</Typography>
+                      <Typography variant="body2" fontWeight={600} sx={{ color: 'primary.main' }}>{item.customerName}</Typography>
+                      <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }}>{item.service}</Typography>
                     </Box>
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" color="#000">
+                    <Typography variant="caption" color="text.secondary">
                       <strong>Products:</strong> {item.products}
                     </Typography>
                     <Typography variant="h6" fontWeight={700}>
@@ -797,7 +806,7 @@ const SalonDashboard: React.FC = () => {
             </Stack>
 
             {/* Customers Section */}
-            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#ffffff' }}>
+            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: 'primary.main' }}>
               Customers
             </Typography>
             <Stack spacing={2}>
@@ -807,28 +816,28 @@ const SalonDashboard: React.FC = () => {
                   bgcolor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(217, 70, 239, 0.2)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
                 }}>
                   <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
                     <Avatar sx={{ width: 36, height: 36, bgcolor: '#d946ef', fontSize: '14px', fontWeight: 600 }}>
                       {customer.initials}
                     </Avatar>
                     <Box flex={1}>
-                      <Typography variant="body2" fontWeight={600}>{customer.name}</Typography>
-                      <Typography variant="caption" color="#000">{customer.service}</Typography>
+                      <Typography variant="body2" fontWeight={600} sx={{ color: 'primary.main' }}>{customer.name}</Typography>
+                      <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }}>{customer.service}</Typography>
                     </Box>
                     {customer.status === 'in-progress' && (
-                      <Chip label="Cut in progress" size="small" sx={{ bgcolor: '#FEF3C7', color: '#713F12', fontSize: '11px', height: 20 }} />
+                      <Chip label="Cut in progress" size="small" sx={{ bgcolor: 'rgba(217, 70, 239, 0.1)', color: 'primary.main', fontSize: '11px', height: 20 }} />
                     )}
                     {customer.status === 'waiting' && (
-                      <Chip label="Waiting" size="small" sx={{ bgcolor: '#DBEAFE', color: '#1E40AF', fontSize: '11px', height: 20 }} />
+                      <Chip label="Waiting" size="small" sx={{ bgcolor: 'rgba(45, 212, 191, 0.1)', color: 'secondary.main', fontSize: '11px', height: 20 }} />
                     )}
                   </Stack>
                   <Button
                     fullWidth
                     sx={{
-                      bgcolor: '#d946ef',
+                      bgcolor: 'primary.main',
                       color: 'white',
                       fontSize: '13px',
                       fontWeight: 600,
@@ -847,7 +856,7 @@ const SalonDashboard: React.FC = () => {
 
             {/* Today's Bookings */}
             <Stack direction="row" justifyContent="space-between" alignItems="center" mt={4} mb={2}>
-              <Typography variant="h6" fontWeight={700} sx={{ color: '#ffffff' }}>
+              <Typography variant="h6" fontWeight={700} sx={{ color: 'primary.main' }}>
                 Today's Bookings
               </Typography>
               <Button
@@ -875,26 +884,26 @@ const SalonDashboard: React.FC = () => {
                   bgcolor: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(217, 70, 239, 0.2)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
                 }}>
                   <Stack direction="row" spacing={2}>
                     <Stack alignItems="center" spacing={0.5}>
                       <Clock size={16} color="#d946ef" />
-                      <Typography variant="body2" fontWeight={600}>{booking.time}</Typography>
+                      <Typography variant="body2" fontWeight={600} color="primary.main">{booking.time}</Typography>
                       {booking.endTime && (
-                        <Typography variant="caption" color="#000">- {booking.endTime}</Typography>
+                        <Typography variant="caption" color="primary.main" sx={{ opacity: 0.6 }}>- {booking.endTime}</Typography>
                       )}
                     </Stack>
                     <Box flex={1}>
-                      <Typography variant="body2" fontWeight={600}>{booking.customerName}</Typography>
+                      <Typography variant="body2" fontWeight={600} color="primary.main">{booking.customerName}</Typography>
                       {booking.stylistName && (
                         <Typography variant="caption" color="#000">
                           Stylist: {booking.stylistName}
                         </Typography>
                       )}
                       {booking.service && (
-                        <Typography variant="caption" display="block" color="#000">
+                        <Typography variant="caption" display="block" color="primary.main" sx={{ opacity: 0.7 }}>
                           {booking.service}
                         </Typography>
                       )}
@@ -907,7 +916,7 @@ const SalonDashboard: React.FC = () => {
 
           {/* Calendar Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: 'primary.main' }}>
               Calendar
             </Typography>
             <Card sx={{
@@ -915,14 +924,14 @@ const SalonDashboard: React.FC = () => {
               bgcolor: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(217, 70, 239, 0.2)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
             }}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
                 <IconButton size="small">
                   <ChevronLeft size={20} />
                 </IconButton>
-                <Typography variant="body1" fontWeight={600}>{monthName}</Typography>
+                <Typography variant="body1" fontWeight={600} color="primary.main">{monthName}</Typography>
                 <IconButton size="small">
                   <ChevronRight size={20} />
                 </IconButton>
@@ -931,7 +940,7 @@ const SalonDashboard: React.FC = () => {
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, mb: 2 }}>
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
                   <Box key={idx} sx={{ textAlign: 'center', py: 1 }}>
-                    <Typography variant="caption" fontWeight={600} color="#000">
+                    <Typography variant="caption" fontWeight={600} color="primary.main" sx={{ opacity: 0.6 }}>
                       {day}
                     </Typography>
                   </Box>
@@ -952,7 +961,7 @@ const SalonDashboard: React.FC = () => {
                     }}
                   >
                     {day && (
-                      <Typography variant="body2" fontWeight={day === 9 ? 600 : 400}>
+                      <Typography variant="body2" fontWeight={day === 9 ? 600 : 400} color={day === 9 ? 'white' : 'primary.main'}>
                         {day}
                       </Typography>
                     )}
@@ -963,7 +972,7 @@ const SalonDashboard: React.FC = () => {
               <Box sx={{ mt: 3, borderTop: '1px solid #E0E0E0', pt: 2 }}>
                 {mockAppointments.map((apt) => (
                   <Stack key={apt.id} direction="row" justifyContent="space-between" alignItems="center" py={1.5} borderBottom="1px solid #F5F5F5">
-                    <Typography variant="body2" fontWeight={600} sx={{ minWidth: 60 }}>
+                    <Typography variant="body2" fontWeight={600} sx={{ minWidth: 60 }} color="primary.main">
                       {apt.time}
                     </Typography>
                     <Typography variant="body2" flex={1} color={apt.status === 'walk-in' ? 'success.main' : '#000'}>
@@ -975,7 +984,7 @@ const SalonDashboard: React.FC = () => {
             </Card>
 
             {/* Revenue Section */}
-            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: '#ffffff' }}>
+            <Typography variant="h6" fontWeight={700} mt={4} mb={2} sx={{ color: 'primary.main' }}>
               Revenue
             </Typography>
             <Stack direction="row" spacing={2}>
@@ -985,13 +994,13 @@ const SalonDashboard: React.FC = () => {
                 bgcolor: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
                 borderRadius: '12px',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(217, 70, 239, 0.2)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
               }}>
                 <Box sx={{ width: 32, height: 32, bgcolor: '#FEF3C7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                  <Scissors size={18} color="#713F12" />
+                  <Scissors size={18} color="primary.main" />
                 </Box>
-                <Typography variant="caption" color="#000" display="block" mb={1}>
+                <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }} display="block" mb={1}>
                   Services
                 </Typography>
                 <Typography variant="h5" fontWeight={700} mb={2}>
@@ -1001,7 +1010,7 @@ const SalonDashboard: React.FC = () => {
                   fullWidth
                   size="small"
                   sx={{
-                    bgcolor: '#d946ef',
+                    bgcolor: 'primary.main',
                     color: 'white',
                     fontSize: '11px',
                     fontWeight: 600,
@@ -1022,13 +1031,13 @@ const SalonDashboard: React.FC = () => {
                 bgcolor: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
                 borderRadius: '12px',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(217, 70, 239, 0.2)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
               }}>
                 <Box sx={{ width: 32, height: 32, bgcolor: '#FEF3C7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                  <ShoppingBag size={18} color="#713F12" />
+                  <ShoppingBag size={18} color="primary.main" />
                 </Box>
-                <Typography variant="caption" color="#000" display="block" mb={1}>
+                <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }} display="block" mb={1}>
                   Products
                 </Typography>
                 <Typography variant="h5" fontWeight={700} mb={2}>
@@ -1038,7 +1047,7 @@ const SalonDashboard: React.FC = () => {
                   fullWidth
                   size="small"
                   sx={{
-                    bgcolor: '#d946ef',
+                    bgcolor: 'primary.main',
                     color: 'white',
                     fontSize: '11px',
                     fontWeight: 600,
@@ -1057,7 +1066,7 @@ const SalonDashboard: React.FC = () => {
 
           {/* Stylists Section */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: '#ffffff' }}>
+            <Typography variant="h6" fontWeight={700} mb={2} sx={{ color: 'primary.main' }}>
               Stylists
             </Typography>
             <Stack spacing={3}>
@@ -1068,8 +1077,8 @@ const SalonDashboard: React.FC = () => {
                       {stylist.initials}
                     </Avatar>
                     <Box>
-                      <Typography variant="body2" fontWeight={600}>{stylist.name}</Typography>
-                      <Typography variant="caption" color="#000">{stylist.role}</Typography>
+                      <Typography variant="body2" fontWeight={600} sx={{ color: 'primary.main' }}>{stylist.name}</Typography>
+                      <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }}>{stylist.role}</Typography>
                     </Box>
                   </Stack>
 
@@ -1079,9 +1088,9 @@ const SalonDashboard: React.FC = () => {
                         key={task.id}
                         sx={{
                           p: 1.5,
-                          bgcolor: task.color || '#F5F5F5',
+                          bgcolor: '#ffffff',
                           borderRadius: '8px',
-                          border: '1px solid #E0E0E0',
+                          border: '1px solid rgba(217, 70, 239, 0.2)',
                         }}
                       >
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -1089,13 +1098,13 @@ const SalonDashboard: React.FC = () => {
                             {task.description}
                           </Typography>
                           {task.duration && (
-                            <Typography variant="caption" color="#000">
+                            <Typography variant="caption" color="primary.main" sx={{ opacity: 0.7 }}>
                               {task.duration}
                             </Typography>
                           )}
                         </Stack>
                         {task.status === 'waiting' && (
-                          <Typography variant="caption" color="#000" display="block" mt={0.5}>
+                          <Typography variant="caption" color="primary.main" sx={{ opacity: 0.6 }} display="block" mt={0.5}>
                             • Waiting
                           </Typography>
                         )}
@@ -1108,7 +1117,7 @@ const SalonDashboard: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

@@ -37,7 +37,7 @@ export const MetricWidget = ({
     switch (trend) {
       case 'up': return { color: '#22c55e', bgcolor: alpha('#22c55e', 0.1) };
       case 'down': return { color: '#ef4444', bgcolor: alpha('#ef4444', 0.1) };
-      default: return { color: 'text.secondary', bgcolor: 'rgba(255,255,255,0.05)' };
+      default: return { color: 'text.secondary', bgcolor: 'grey.100' };
     }
   };
 
@@ -64,7 +64,7 @@ export const MetricWidget = ({
             </Box>
           )}
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', lineHeight: 1.1, mb: 0.5 }}>
+            <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1.1, mb: 0.5 }}>
               {value}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
