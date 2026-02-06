@@ -3,13 +3,13 @@
 @import './styles/components.css';
 /* @import './index.css'; */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Custom Global Reset overrides if any */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Custom Global Reset - wrapped in @layer base for Tailwind v4 */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 }

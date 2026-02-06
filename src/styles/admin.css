@@ -104,7 +104,7 @@
     border-radius: 12px;
     color: var(--admin-text-muted);
     text-decoration: none;
-    transition: all 0.2s;
+    transition: background-color 0.2s ease, color 0.2s ease;
     cursor: pointer;
 }
 
@@ -183,9 +183,9 @@
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 10px 15px -3px rgba(162, 28, 175, 0.2);
-    transition: transform 0.2s;
+    transition: box-shadow 0.2s ease;
 }
 
 .stats-card:hover {
-    transform: scale(1.02);
+    box-shadow: 0 15px 25px -5px rgba(162, 28, 175, 0.3);
 }

@@ -40,13 +40,16 @@ const SignIn = lazy(() => import('./pages/admin/SignIn'));
 const SignUp = lazy(() => import('./pages/admin/SignUp'));
 const ERPDashboard = lazy(() => import('./pages/admin/ERPDashboard'));
 const ERPLayout = lazy(() => import('./components/layout/sidebar_admin_erp/ERPLayout'));
+const NailEquipment = lazy(() => import('./pages/admin/NailEquipment'));
+const SupplierManagement = lazy(() => import('./pages/admin/SupplierManagement'));
+const SalonDashboard = lazy(() => import('./pages/admin/SalonDashboard'));
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Login />} />
-      
+
       {/* Zota POS Routes - Full Screen */}
       <Route>
         {/* element={<RequireAuth allowedRoles={['distributor']} />} */}
@@ -75,7 +78,7 @@ function App() {
       <Route>
         {/* element={<RequireAuth allowedRoles={['distributor']} /> */}
         <Route path="/distributor" element={<DistributorLayout />}>
-          <Route index element={<Navigate to="marketplace" replace />} />
+          {/* <Route index element={<Navigate to="marketplace" replace />} /> */}
           <Route path="marketplace" element={<Marketplace />} />
           <Route path="warehouse" element={<Warehouse />} />
           <Route path="pos" element={<Navigate to="/pos-system" replace />} />
@@ -88,154 +91,178 @@ function App() {
 
       {/* Admin Routes - Lazy Loaded with Suspense */}
       <Route path="/admin" element={<HiwebSidebar />}>
-        <Route 
-          index 
+        <Route
+          index
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <TailAdminDashboard />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="ecommerce" 
+        <Route
+          path="ecommerce"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Ecommerce />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="analytics" 
+        <Route
+          path="analytics"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Analytics />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="erp" 
+        <Route
+          path="erp"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <ERPDashboard />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="task" 
+        <Route
+          path="task"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Task />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="forms" 
+        <Route
+          path="forms"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Forms />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="forms/elements" 
+        <Route
+          path="forms/elements"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <FormElements />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="forms/layout" 
+        <Route
+          path="forms/layout"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <FormLayout />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="settings" 
+        <Route
+          path="settings"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Settings />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="tables" 
+        <Route
+          path="tables"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Tables />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="messages" 
+        <Route
+          path="messages"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Messages />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="auth" 
+        <Route
+          path="auth"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <Auth />
             </Suspense>
-          } 
+          }
         />
-          <Route 
-          path="LogisticsDashboard" 
+        <Route
+          path="LogisticsDashboard"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <LogisticsDashboard />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="auth/signin" 
+        <Route
+          path="auth/signin"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <SignIn />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="auth/signup" 
+        <Route
+          path="auth/signup"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <SignUp />
             </Suspense>
-          } 
+          }
         />
-        <Route 
-          path="old-dashboard" 
+        <Route
+          path="old-dashboard"
           element={
             <Suspense fallback={<RouteLoadingFallback />}>
               <AdminDashboard />
             </Suspense>
-          } 
+          }
+        />
+        <Route
+          path="nail-equipment"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <NailEquipment />
+            </Suspense>
+          }
+        />
+        <Route
+          path="suppliers"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <SupplierManagement />
+            </Suspense>
+          }
+        />
+        <Route
+          path="salon"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <SalonDashboard />
+            </Suspense>
+          }
         />
       </Route>
 
-        <Route path="/admin-system" element={<ERPLayout />}>
-          <Route 
-            index 
-            element={
-              <Suspense fallback={<RouteLoadingFallback />}>
-                <ERPDashboard />
-              </Suspense>
-            } 
-          />
-          <Route 
-            path="logistics" 
-            element={
-              <Suspense fallback={<RouteLoadingFallback />}>
-                <LogisticsDashboard />
-              </Suspense>
-            } 
-          />
-        </Route>
+      <Route path="/admin-system" element={<ERPLayout />}>
+        <Route
+          index
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <ERPDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="logistics"
+          element={
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <LogisticsDashboard />
+            </Suspense>
+          }
+        />
+      </Route>
 
       {/* Fallback */}
       <Route path="/" element={<Navigate to="/login" replace />} />
