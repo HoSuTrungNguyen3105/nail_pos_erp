@@ -51,7 +51,7 @@ const AdminHeader = memo<{ onMenuClick: () => void }>(({ onMenuClick }) => {
             sx={{ color: 'primary.main', '&:hover': { bgcolor: 'rgba(217, 70, 239, 0.04)' } }}
             aria-label="Notifications"
           >
-            <Badge
+            {/* <Badge
               badgeContent={3}
               sx={{
                 '& .MuiBadge-badge': {
@@ -61,7 +61,7 @@ const AdminHeader = memo<{ onMenuClick: () => void }>(({ onMenuClick }) => {
               }}
             >
               <Bell size={20} />
-            </Badge>
+            </Badge> */}
           </IconButton>
           <Avatar
             src="https://ui-avatars.com/api/?name=Admin+User"
